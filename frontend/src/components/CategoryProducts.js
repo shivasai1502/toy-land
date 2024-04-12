@@ -77,7 +77,7 @@ const CategoryProducts = () => {
                   <span className="description">{product.description}</span>
                 </Card.Text>
                 <Card.Text>
-                  <span className="card-text-bold">Price:</span> ${product.price}
+                  <span className="card-price">Price:</span> ${product.price}
                 </Card.Text>
                 <div className="button-container">
                   <div>
