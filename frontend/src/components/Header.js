@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 import '../css/Header.css';
-import { useNavigate } from 'react-router-dom';
-
 import ToyLogo from '../toy_images/toy-land-logo.png';
 
 const categories = [
@@ -19,18 +19,26 @@ const categories = [
 ];
 
 function Header() {
+  const { isAuthenticated, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleCategoryClick = (categoryId) => {
     navigate(`/category/${categoryId}`);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <nav className="navbar">
-      <a href="/"><img src={ToyLogo} alt="Company Logo" /></a>
+      <Link to="/">
+        <img src={ToyLogo} alt="Company Logo" />
+      </Link>
       <ul>
         <li className="dropdown">
-          <a href="/shop">Shop</a>
+          <Link>Shop</Link>
           <div className="dropdown-content">
             {categories.map((category, index) => (
               <a
@@ -44,19 +52,27 @@ function Header() {
           </div>
         </li>
         <li>
-          <a href="/wishlist">Wishlist</a>
+          <Link to="/wishlist">Wishlist</Link>
         </li>
         <li>
-          <a href="/cart">Cart</a>
+          <Link to="/cart">Cart</Link>
         </li>
-        <li className="dropdown">
-          <a href="/account">Account</a>
-          <div className="dropdown-content">
-            <a href="/profile">Profile</a>
-            <a href="/purchase-history">Purchase History</a>
-            <a href="/sign-out">Sign Out</a>
-          </div>
-        </li>
+        {isAuthenticated ? (
+          <li className="dropdown">
+            <Link>Account</Link>
+            <div className="dropdown-content">
+              <Link to="/profile">Profile</Link>
+              <Link to="/purchase-history">Purchase History</Link>
+              <a href="/" onClick={handleLogout}>Sign Out</a>
+            </div>
+          </li>
+        ) : (
+          <>
+            <li>
+              <Link to="/login">SignIn/SignUp</Link>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );

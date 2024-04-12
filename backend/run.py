@@ -1,9 +1,8 @@
 import json
-import os
 from bson.objectid import ObjectId
 from pymongo import MongoClient
 from gridfs import GridFS
-from flask import Flask, jsonify, send_file, request
+from flask import Flask, jsonify, send_file, request, session
 from io import BytesIO
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -17,6 +16,8 @@ db = client['toy_store']
 fs = GridFS(db)
 product_collection = db['products']
 customer_collection = db['customer']
+
+
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
@@ -68,6 +69,7 @@ def get_image_url(image_id):
 def login():
     data = request.get_json()
     email = data['email']
+
     if 'registration' in data:
         # Handle user registration
         customer_data = {
@@ -81,6 +83,7 @@ def login():
             return jsonify({"error": "User with this email already exists"}), 400
         customer_collection.insert_one(customer_data)
         return jsonify({"message": "User registered successfully"}), 201
+
     elif 'login' in data:
         # Handle user login
         email = data['email']
@@ -92,8 +95,10 @@ def login():
         else:
             # Invalid credentials
             return jsonify({"error": "Invalid email or password"}), 401
+
     else:
         return jsonify({"error": "Invalid request"}), 400
+
 
 @app.route('/customers', methods=['GET'])
 def get_all_products():

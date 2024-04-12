@@ -1,17 +1,19 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "../css/SignInUp.css";
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
+import '../css/SignInUp.css';
 
 function SignUpForm() {
   const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
-    successMessage: "",
-    errorMessage: "",
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: '',
+    successMessage: '',
+    errorMessage: '',
   });
 
+  const { register } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -29,67 +31,51 @@ function SignUpForm() {
   };
 
   const validatePassword = (password) => {
-    // Add your password validation logic here
     return password.length >= 8;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate form data
     if (!validateName(formData.first_name) || !validateName(formData.last_name)) {
-      setFormData({ ...formData, errorMessage: "Names must contain only alphabets" });
+      setFormData({ ...formData, errorMessage: 'Names must contain only alphabets' });
       return;
     }
 
     if (!validateEmail(formData.email)) {
-      setFormData({ ...formData, errorMessage: "Invalid email address" });
+      setFormData({ ...formData, errorMessage: 'Invalid email address' });
       return;
     }
 
     if (!validatePassword(formData.password)) {
-      setFormData({ ...formData, errorMessage: "Password must be at least 8 characters long" });
+      setFormData({ ...formData, errorMessage: 'Password must be at least 8 characters long' });
       return;
     }
 
-    try {
-      const response = await fetch("http://localhost:5000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          first_name: formData.first_name,
-          last_name: formData.last_name,
-          email: formData.email,
-          password: formData.password,
-          registration: true,
-        }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Server response:", data);
+    register(
+      formData.first_name,
+      formData.last_name,
+      formData.email,
+      formData.password,
+      () => {
         setFormData({
           ...formData,
-          successMessage: "User registered successfully",
-          errorMessage: "",
+          successMessage: 'User registered successfully',
+          errorMessage: '',
         });
         setTimeout(() => {
           setFormData({
             ...formData,
-            successMessage: "",
-            errorMessage: "",
+            successMessage: '',
+            errorMessage: '',
           });
-          navigate("/");
+          navigate('/');
         }, 1000);
-      } else {
-        console.error("Error registering user:", response.status);
-        setFormData({ ...formData, errorMessage: "Error registering user" });
+      },
+      (error) => {
+        setFormData({ ...formData, errorMessage: error });
       }
-    } catch (error) {
-      console.error("Error:", error);
-      setFormData({ ...formData, errorMessage: "An error occurred. Please try again later." });
-    }
+    );
   };
 
   return (
