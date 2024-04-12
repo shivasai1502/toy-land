@@ -12,7 +12,6 @@ function SignUpForm() {
     successMessage: '',
     errorMessage: '',
   });
-
   const { register } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -36,46 +35,38 @@ function SignUpForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!validateName(formData.first_name) || !validateName(formData.last_name)) {
-      setFormData({ ...formData, errorMessage: 'Names must contain only alphabets' });
-      return;
-    }
-
-    if (!validateEmail(formData.email)) {
-      setFormData({ ...formData, errorMessage: 'Invalid email address' });
-      return;
-    }
-
-    if (!validatePassword(formData.password)) {
-      setFormData({ ...formData, errorMessage: 'Password must be at least 8 characters long' });
-      return;
-    }
-
-    register(
-      formData.first_name,
-      formData.last_name,
-      formData.email,
-      formData.password,
-      () => {
+    try {
+      if (!validateName(formData.first_name) || !validateName(formData.last_name)) {
+        throw new Error('Names must contain only alphabets');
+      }
+      if (!validateEmail(formData.email)) {
+        throw new Error('Invalid email address');
+      }
+      if (!validatePassword(formData.password)) {
+        throw new Error('Password must be at least 8 characters long');
+      }
+      await register(
+        formData.first_name,
+        formData.last_name,
+        formData.email,
+        formData.password
+      );
+      setFormData({
+        ...formData,
+        successMessage: 'User registered successfully',
+        errorMessage: '',
+      });
+      setTimeout(() => {
         setFormData({
           ...formData,
-          successMessage: 'User registered successfully',
+          successMessage: '',
           errorMessage: '',
         });
-        setTimeout(() => {
-          setFormData({
-            ...formData,
-            successMessage: '',
-            errorMessage: '',
-          });
-          navigate('/');
-        }, 1000);
-      },
-      (error) => {
-        setFormData({ ...formData, errorMessage: error });
-      }
-    );
+        navigate('/home');
+      }, 1000);
+    } catch (error) {
+      setFormData({ ...formData, errorMessage: error.message });
+    }
   };
 
   return (

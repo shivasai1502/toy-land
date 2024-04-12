@@ -5,7 +5,7 @@ import '../css/viewAll.css';
 function ViewAll() {
   return (
     <Container className="container-view">
-        <a href="/shop" className="view-all-link">
+        <a href="/view-all-products" className="view-all-link">
           <div className="view-all-text">Click Here to View All Types of Toys</div>
         </a>
     </Container>

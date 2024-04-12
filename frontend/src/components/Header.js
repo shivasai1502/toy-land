@@ -28,7 +28,7 @@ function Header() {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate('/home');
   };
 
   return (
@@ -63,7 +63,7 @@ function Header() {
             <div className="dropdown-content">
               <Link to="/profile">Profile</Link>
               <Link to="/purchase-history">Purchase History</Link>
-              <a href="/" onClick={handleLogout}>Sign Out</a>
+              <a href="/login" onClick={handleLogout}>Sign Out</a>
             </div>
           </li>
         ) : (

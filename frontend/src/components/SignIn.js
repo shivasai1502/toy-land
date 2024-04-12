@@ -4,7 +4,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import '../css/SignInUp.css';
 
 function SignInForm() {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: '', password: '', errorMessage: '' });
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -14,8 +14,12 @@ function SignInForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login(formData.email, formData.password);
-    navigate('/');
+    try {
+      await login(formData.email, formData.password);
+      navigate('/home');
+    } catch (error) {
+      setFormData({ ...formData, errorMessage: error.message });
+    }
   };
 
   return (
@@ -41,6 +45,9 @@ function SignInForm() {
         />
         <a href="/forget-password">Forgot your password?</a>
         <button type="submit">Sign In</button>
+        {formData.errorMessage && (
+          <div className="error-message">{formData.errorMessage}</div>
+        )}
       </form>
     </div>
   );
