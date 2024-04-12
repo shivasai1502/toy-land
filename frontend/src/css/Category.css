@@ -1,0 +1,23 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Automatically adjust column width */
+  gap: 30px; /* Add gap between grid items */
+  margin-bottom: 30px; /* Add some space before the "View All" section */
+}
+
+.category-item {
+  text-align: center;
+  font-style: Solid;
+  font-weight: bold;
+  font-size: medium;
+}
+
+.category-item a {
+  text-decoration: none;
+  color: #333;
+}
+
+.category-image {
+  width: 70%;
+  height: auto;
+}

@@ -1,0 +1,22 @@
+.hero-title {
+    text-align: center;
+    font-style: Solid;
+    color: #333;
+    font-weight: bold;
+    font-size: 50px;
+}
+
+.hero-title-h {
+    text-align: center;
+    font-style: Solid;
+    color: #333;
+    font-weight: bold;
+    font-size: 30px;
+
+}
+
+.hero-photo {
+    display: flex;
+    margin: 0 auto;
+    width: 1000px;
+}

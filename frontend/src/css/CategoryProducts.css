@@ -1,0 +1,48 @@
+.product-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.product-card {
+  width: 350px;
+  margin: 30px;
+}
+
+.product-img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-container > div {
+  margin-top: 10px;
+}
+
+.card-text-bold {
+  font-weight: bold;
+}
+
+.description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.description:hover {
+  overflow: visible;
+  -webkit-line-clamp: unset;
+}
+
+.card-price {
+  font-weight: bold;
+  font-size: 4rem; /* Adjust the value as needed */
+}

@@ -1,0 +1,62 @@
+* {
+  box-sizing: border-box;
+}
+/* Header styles */
+.navbar {
+  background-color: #f8f9fa; /* Light gray background */
+  padding: 10px 20px; /* Add padding around the navbar */
+  display: flex; /* Use flexbox for layout */
+  justify-content: space-between; /* Space evenly between children */
+  align-items: center; /* Center items vertically */
+  box-shadow: 0px 2.98256px 7.4564px rgba(0, 0, 0, 0.1);
+}
+
+.navbar img {
+  width: 300px; /* Adjust logo width */
+  height: auto; /* Maintain aspect ratio */
+  margin-left: 70px; /* Add spacing to the right of the logo */
+}
+
+.navbar ul {
+  list-style-type: none; /* Remove default list style */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  display: flex; /* Use flexbox for layout */
+}
+
+.navbar ul li {
+  margin-right: 50px; /* Add spacing between navigation items */
+  bottom: 0; /* Align items to the bottom */
+}
+
+.navbar ul li:last-child {
+  margin-right: 300px; /* Remove margin from the last navigation item */
+}
+
+.navbar ul li a {
+  text-decoration: none; /* Remove underline from links */
+  color: #333; /* Set link color */
+  font-size: 18px; /* Adjust font size */
+  font-weight: bold; /* Set font weight to bold */
+}
+
+/* Dropdown styles */
+.dropdown-content {
+  display: none; /* Hide dropdown content by default */
+  position: absolute; /* Position dropdown absolutely */
+  background-color: #fff; /* White background */
+  min-width: 300px; /* Set minimum width */
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Add shadow */
+  z-index: 1; /* Ensure dropdown appears above other content */
+}
+
+.dropdown-content a {
+  color: #333; /* Set link color */
+  padding: 12px 16px; /* Add padding around links */
+  display: block; /* Display links as block elements */
+}
+
+.dropdown:hover .dropdown-content {
+  display: block; /* Display dropdown content on hover */
+}
+
