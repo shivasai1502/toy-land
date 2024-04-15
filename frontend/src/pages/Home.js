@@ -3,7 +3,7 @@ import Categories from '../components/Categories';
 import Hero from '../components/Hero';
 import ViewAll from '../components/viewAll';
 
-const HomePage = () => {
+const Home = () => {
   return (
     <div>
       <Hero />
@@ -13,4 +13,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Home;

@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '../contexts/AuthContext';
-import '../css/Header.css';
-import ToyLogo from '../toy_images/toy-land-logo.png';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import '../css/Navbar.css';
+import ToyLogo from '../toy_images/toy-land-logo1.png';
 
 const categories = [
   { name: "Action Figures", link: "/action-figures" },
@@ -18,16 +17,16 @@ const categories = [
   { name: "Outdoor Toys", link: "/outdoor-toys" },
 ];
 
-function Header() {
-  const { isAuthenticated, logout } = useContext(AuthContext);
+const Navbar = () => {
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
   const handleCategoryClick = (categoryId) => {
     navigate(`/category/${categoryId}`);
   };
 
   const handleLogout = () => {
-    logout();
+    localStorage.removeItem('token');
     navigate('/home');
   };
 
@@ -57,7 +56,7 @@ function Header() {
         <li>
           <Link to="/cart">Cart</Link>
         </li>
-        {isAuthenticated ? (
+        {token ? (
           <li className="dropdown">
             <Link>Account</Link>
             <div className="dropdown-content">
@@ -78,4 +77,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default Navbar;

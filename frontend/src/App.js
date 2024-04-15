@@ -1,25 +1,46 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
+import React, { useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import LoginForm from './components/LogInForm';
+import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
 import CategoryProducts from './components/CategoryProducts';
-import { AuthProvider } from './contexts/AuthContext';
+import ViewAll from './components/viewAll';
+import Home from './pages/Home';
 
 const App = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkTokenExpiration = () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        const currentTime = Date.now() / 1000;
+        if (decodedToken.exp < currentTime) {
+          localStorage.removeItem('token');
+          navigate('/login');
+        }
+      }
+    };
+
+    const intervalId = setInterval(checkTokenExpiration, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [navigate]);
+
   return (
-    <AuthProvider>
-      <Router>
-        <Header />
-        <Routes>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/category/:categoryId" element={<CategoryProducts />} />
-        </Routes>
-        <Footer />
-      </Router>
-    </AuthProvider>
+    <div>
+      <Navbar />
+      <Routes>
+        <Route path="/home" element={<Home />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/category/:categoryId" element={<CategoryProducts />} />
+        <Route path="/view-all-products" element={<ViewAll />} />
+      </Routes>
+      <Footer />
+    </div>
   );
 };
 

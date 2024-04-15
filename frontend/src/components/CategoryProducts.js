@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
-import '../css/CategoryProducts.css'; // Import CSS file for styling
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import '../css/CategoryProducts.css';
 
 const CategoryProducts = () => {
   const { categoryId } = useParams();
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/products?category=${categoryId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch products');
-        }
-        const data = await response.json();
-        setProducts(data);
+        const response = await axios.get(`http://localhost:5000/api/products/category?category=${categoryId}`);
+        setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -27,17 +23,18 @@ const CategoryProducts = () => {
 
   const addToCart = async (product) => {
     try {
-      const response = await fetch('/api/cart', {
-        method: 'POST',
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      await axios.post('http://localhost:5000/api/cart/insert', product, {
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(product),
       });
-      if (!response.ok) {
-        throw new Error('Failed to add to cart');
-      }
-      setCart([...cart, product]);
     } catch (error) {
       console.error('Error adding to cart:', error);
     }
@@ -45,17 +42,18 @@ const CategoryProducts = () => {
 
   const addToWishlist = async (product) => {
     try {
-      const response = await fetch('/api/wishlist', {
-        method: 'POST',
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      await axios.post('http://localhost:5000/api/wishlist/insert', product, {
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(product),
       });
-      if (!response.ok) {
-        throw new Error('Failed to add to wishlist');
-      }
-      setWishlist([...wishlist, product]);
     } catch (error) {
       console.error('Error adding to wishlist:', error);
     }
@@ -67,7 +65,7 @@ const CategoryProducts = () => {
         {products.map((product) => (
           <Col key={product._id} md={6} lg={4} xl={3}>
             <Card className="product-card">
-              <Card.Img variant="top" src={`http://localhost:5000/images/${product.image_id}`} className="product-img" />
+              <Card.Img variant="top" src={`http://localhost:5000/api/products/images/${product.image_id}`} className="product-img" />
               <Card.Body>
                 <Card.Title>
                   <span className="card-text-bold">Toy Name:</span> {product.name}
