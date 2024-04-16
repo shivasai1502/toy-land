@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import LoginForm from './components/LogInForm';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -34,6 +34,7 @@ const App = () => {
     <div>
       <Navbar />
       <Routes>
+        <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/category/:categoryId" element={<CategoryProducts />} />
