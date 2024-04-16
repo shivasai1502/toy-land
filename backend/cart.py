@@ -47,7 +47,7 @@ def remove_from_cart(current_user):
     else:
         return jsonify({'error': 'Cart not found'}), 404
 
-@cart_bp.route('/', methods=['GET'])
+@cart_bp.route('/all', methods=['GET'])
 @token_required
 def get_cart_products(current_user):
     cart = db.cart.find_one({'user_id': current_user['_id']})

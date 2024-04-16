@@ -21,39 +21,45 @@ const CategoryProducts = () => {
     fetchProducts();
   }, [categoryId]);
 
-  const addToCart = async (product) => {
+  const addToCart = async (productId) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         navigate('/login');
         return;
       }
-
-      await axios.post('http://localhost:5000/api/cart/insert', product, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      await axios.post(
+        'http://localhost:5000/api/cart/insert',
+        { product_id: productId },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
     } catch (error) {
       console.error('Error adding to cart:', error);
     }
   };
 
-  const addToWishlist = async (product) => {
+  const addToWishlist = async (productId) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         navigate('/login');
         return;
       }
-
-      await axios.post('http://localhost:5000/api/wishlist/insert', product, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      await axios.post(
+        'http://localhost:5000/api/wishlist/insert',
+        { product_id: productId },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
     } catch (error) {
       console.error('Error adding to wishlist:', error);
     }
@@ -79,12 +85,12 @@ const CategoryProducts = () => {
                 </Card.Text>
                 <div className="button-container">
                   <div>
-                    <Button variant="primary" onClick={() => addToCart(product)}>
+                    <Button variant="primary" onClick={() => addToCart(product._id)}>
                       Add to Cart
                     </Button>
                   </div>
                   <div>
-                    <Button variant="secondary" onClick={() => addToWishlist(product)}>
+                    <Button variant="secondary" onClick={() => addToWishlist(product._id)}>
                       Add to Wishlist
                     </Button>
                   </div>
