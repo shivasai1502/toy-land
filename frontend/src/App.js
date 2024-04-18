@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import CategoryProducts from './components/CategoryProducts';
 import ViewAll from './components/viewAll';
 import Home from './pages/Home';
+import Cart from './components/Cart';
 
 const App = () => {
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ const App = () => {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/category/:categoryId" element={<CategoryProducts />} />
         <Route path="/view-all-products" element={<ViewAll />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
       <Footer />
     </div>

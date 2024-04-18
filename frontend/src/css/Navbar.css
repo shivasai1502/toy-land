@@ -4,7 +4,7 @@
 /* Header styles */
 .navbar {
   background-color: #f8f9fa; /* Light gray background */
-  padding: 10px 20px; /* Add padding around the navbar */
+  padding: 0px 20px; /* Add padding around the navbar */
   display: flex; /* Use flexbox for layout */
   justify-content: space-between; /* Space evenly between children */
   align-items: center; /* Center items vertically */
@@ -12,7 +12,7 @@
 }
 
 .navbar img {
-  width: 300px; /* Adjust logo width */
+  width: 250px; /* Adjust logo width */
   height: auto; /* Maintain aspect ratio */
   margin-left: 70px; /* Add spacing to the right of the logo */
 }

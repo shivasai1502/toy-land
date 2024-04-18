@@ -18,19 +18,16 @@ def get_products_by_category():
     if not category_id:
         return jsonify({"error": "Category ID is required"}), 400
     
-    products = list(product_collection.find({'category': category_id}, {'_id': 1, 'name': 1, 'description': 1, 'price': 1, 'category': 1, 'age_range': 1, 'image_id': 1}))
-    for product in products:
-        product['_id'] = str(product['_id'])
-        product['image'] = get_image_url(product['image_id'])
-    return json.dumps(products, cls=JSONEncoder)
-
-
-@products_bp.route('/all', methods=['GET'])
-def get_products():
-    products = list(product_collection.find({}, {'_id': 1, 'name': 1, 'description': 1, 'price': 1, 'category': 1, 'age_range': 1, 'image_id': 1}))
-    for product in products:
-        product['_id'] = str(product['_id'])
-        product['image'] = get_image_url(product['image_id'])
+    if category_id == "view-all-products":
+        products = list(product_collection.find({}, {'_id': 1, 'name': 1, 'description': 1, 'price': 1, 'category': 1, 'age_range': 1, 'image_id': 1})) 
+        for product in products:
+            product['_id'] = str(product['_id'])
+            product['image'] = get_image_url(product['image_id'])
+    else:
+        products = list(product_collection.find({'category': category_id}, {'_id': 1, 'name': 1, 'description': 1, 'price': 1, 'category': 1, 'age_range': 1, 'image_id': 1}))
+        for product in products:
+            product['_id'] = str(product['_id'])
+            product['image'] = get_image_url(product['image_id'])
     return json.dumps(products, cls=JSONEncoder)
 
 @products_bp.route('/images/<image_id>', methods=['GET'])

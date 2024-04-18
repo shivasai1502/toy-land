@@ -1,7 +1,9 @@
+import json
 from flask import Blueprint, request, jsonify
 from database import db
 from auth_utils import token_required
 from bson import ObjectId
+from jsonencoder import JSONEncoder
 
 cart_bp = Blueprint('cart', __name__)
 
@@ -10,40 +12,47 @@ cart_bp = Blueprint('cart', __name__)
 def add_to_cart(current_user):
     data = request.json
     product_id = data['product_id']
-
     cart = db.cart.find_one({'user_id': current_user['_id']})
-
     if cart:
-        # If cart exists, add the product to the existing cart
-        db.cart.update_one(
-            {'_id': cart['_id']},
-            {'$push': {'products': ObjectId(product_id)}}
-        )
+        # If cart exists, check if the product is already in the cart
+        product_in_cart = db.cart.find_one({
+            '_id': cart['_id'],
+            'products.product_id': ObjectId(product_id)
+        })
+        if product_in_cart:
+            # If the product is already in the cart, increment the quantity
+            db.cart.update_one(
+                {'_id': cart['_id'], 'products.product_id': ObjectId(product_id)},
+                {'$inc': {'products.$.quantity': 1}}
+            )
+        else:
+            # If the product is not in the cart, add it with quantity 1
+            db.cart.update_one(
+                {'_id': cart['_id']},
+                {'$push': {'products': {'product_id': ObjectId(product_id), 'quantity': 1}}}
+            )
     else:
-        # If cart doesn't exist, create a new cart with the product
+        # If cart doesn't exist, create a new cart with the product and quantity 1
         new_cart = {
             'user_id': current_user['_id'],
-            'products': [ObjectId(product_id)]
+            'products': [{'product_id': ObjectId(product_id), 'quantity': 1}]
         }
         db.cart.insert_one(new_cart)
-
     return jsonify({'message': 'Product added to cart successfully'})
 
 @cart_bp.route('/delete', methods=['DELETE'])
 @token_required
 def remove_from_cart(current_user):
     data = request.json
-    product_id = data['product_id']
-
+    product_ids = data['product_ids']
     cart = db.cart.find_one({'user_id': current_user['_id']})
-
     if cart:
-        # Remove the product from the cart
+        # Remove the selected products from the cart
         db.cart.update_one(
             {'_id': cart['_id']},
-            {'$pull': {'products': ObjectId(product_id)}}
+            {'$pull': {'products': {'product_id': {'$in': [ObjectId(product_id) for product_id in product_ids]}}}}
         )
-        return jsonify({'message': 'Product removed from cart successfully'})
+        return jsonify({'message': 'Products removed from cart successfully'})
     else:
         return jsonify({'error': 'Cart not found'}), 404
 
@@ -51,9 +60,29 @@ def remove_from_cart(current_user):
 @token_required
 def get_cart_products(current_user):
     cart = db.cart.find_one({'user_id': current_user['_id']})
-
     if cart:
-        products = list(db.products.find({'_id': {'$in': cart['products']}}))
-        return jsonify(products)
+        product_ids = [product['product_id'] for product in cart['products']]
+        products = list(db.products.find({'_id': {'$in': product_ids}}))
+        cart_products = []
+        for product in products:
+            quantity = next(p['quantity'] for p in cart['products'] if p['product_id'] == product['_id'])
+            cart_products.append({**product, 'quantity': quantity})
+        return json.dumps(cart_products, cls=JSONEncoder)
+    else:
+        return jsonify({'error': 'Cart not found'}), 404
+
+@cart_bp.route('/update', methods=['PUT'])
+@token_required
+def update_quantity(current_user):
+    data = request.json
+    product_id = data['product_id']
+    quantity = data['quantity']
+    cart = db.cart.find_one({'user_id': current_user['_id']})
+    if cart:
+        db.cart.update_one(
+            {'_id': cart['_id'], 'products.product_id': ObjectId(product_id)},
+            {'$set': {'products.$.quantity': quantity}}
+        )
+        return jsonify({'message': 'Quantity updated successfully'})
     else:
         return jsonify({'error': 'Cart not found'}), 404

@@ -21,10 +21,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
-  const handleCategoryClick = (categoryId) => {
-    navigate(`/category/${categoryId}`);
-  };
-
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/home');
@@ -42,8 +38,7 @@ const Navbar = () => {
             {categories.map((category, index) => (
               <a
                 key={index}
-                href=""
-                onClick={() => handleCategoryClick(category.link.slice(1))}
+                href={`/category/${category.link.slice(1)}`}
               >
                 {category.name}
               </a>

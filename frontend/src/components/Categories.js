@@ -1,6 +1,5 @@
 import React from 'react';
 import { Container, Col, Image } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import '../css/Category.css';
 
 // Import images for each category
@@ -15,64 +14,59 @@ import artsAndCraftsImage from '../toy_images/arts_and_crafts_toys/main_image.pn
 import outdoorToysImage from '../toy_images/outdoor_toys/main_image.png';
 
 const Categories = () => {
-  const navigate = useNavigate();
-
-  const handleCategoryClick = (categoryId) => {
-    navigate(`/category/${categoryId}`);
-  };
 
   return (
     <Container className="container">
       {/* Grid Items */}
-      <Col className="category-item" onClick={() => handleCategoryClick('action-figures')}>
+      <Col className="category-item">
         <a href="/category/action-figures">
           <Image src={actionFiguresImage} className="category-image" />
           <div>Action Figures</div>
         </a>
       </Col>
-      <Col className="category-item" onClick={() => handleCategoryClick('dolls')}>
+      <Col className="category-item" >
         <a href="/category/dolls">
           <Image src={dollsImage} className="category-image" />
           <div>Dolls</div>
         </a>
       </Col>
-      <Col className="category-item" onClick={() => handleCategoryClick('stuffed-animals')}>
+      <Col className="category-item" >
         <a href="/category/stuffed-animals">
           <Image src={stuffedAnimalsImage} className="category-image" />
           <div>Stuffed Animals</div>
         </a>
       </Col>
-      <Col className="category-item" onClick={() => handleCategoryClick('building-blocks')}>
+      <Col className="category-item" >
         <a href="/category/building-blocks">
           <Image src={buildingBlocksImage} className="category-image" />
           <div>Building Blocks and Construction</div>
         </a>
       </Col>
-      <Col className="category-item" onClick={() => handleCategoryClick('puzzles')}>
+      <Col className="category-item" >
         <a href="/category/puzzles">
           <Image src={puzzlesImage} className="category-image" />
           <div>Puzzles</div>
         </a>
       </Col>
-      <Col className="category-item" onClick={() => handleCategoryClick('card-games')}>
+      <Col className="category-item" >
         <a href="/category/card-games">
           <Image src={cardGamesImage} className="category-image" />
           <div>Card Games</div>
         </a>
       </Col>
-      <Col className="category-item" onClick={() => handleCategoryClick('educational-toys')}>
+      <Col className="category-item" >
         <a href="/category/educational-toys">
           <Image src={educationalToysImage} className="category-image" />
           <div>Educational Toys</div>
         </a>
       </Col>
-      <Col className="category-item" onClick={() => handleCategoryClick('arts-and-crafts')}>
+      <Col className="category-item" >
         <a href="/category/arts-and-crafts">
           <Image src={artsAndCraftsImage} className="category-image" />
           <div>Arts and Crafts</div>
         </a>
       </Col>
-      <Col className="category-item" onClick={() => handleCategoryClick('outdoor-toys')}>
+      <Col className="category-item" >
         <a href="/category/outdoor-toys">
           <Image src={outdoorToysImage} className="category-image" />
           <div>Outdoor Toys</div>
