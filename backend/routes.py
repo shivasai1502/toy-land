@@ -25,7 +25,9 @@ def register():
         'firstname': firstname,
         'lastname': lastname,
         'email': email,
-        'password': hashed_password
+        'password': hashed_password,
+        'phone_number': None,
+        'addresses': []
     }
 
     try:
@@ -54,7 +56,7 @@ def login():
             return jsonify({'error': 'Invalid username or password'}), 401
 
         current_time = datetime.datetime.now(datetime.timezone.utc)
-        expiration_time = current_time + datetime.timedelta(minutes=30)
+        expiration_time = current_time + datetime.timedelta(minutes=60)
 
         token = jwt.encode({
             'email': email,

@@ -7,6 +7,9 @@ import CategoryProducts from './components/CategoryProducts';
 import ViewAll from './components/viewAll';
 import Home from './pages/Home';
 import Cart from './components/Cart';
+import Profile from './components/Profile';
+import Checkout from './components/Checkout';
+import IndividualProduct from './components/IndividualProduct';
 
 const App = () => {
   const navigate = useNavigate();
@@ -41,6 +44,9 @@ const App = () => {
         <Route path="/category/:categoryId" element={<CategoryProducts />} />
         <Route path="/view-all-products" element={<ViewAll />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/view-individual-product/:productId" element={<IndividualProduct />} />
       </Routes>
       <Footer />
     </div>

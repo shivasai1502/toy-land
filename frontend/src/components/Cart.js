@@ -51,7 +51,8 @@ const CartPage = () => {
   };
 
   const handleCheckout = () => {
-    navigate('/checkout', { state: { selectedItems } });
+    const selectedCartItems = cartItems.filter((item) => selectedItems.includes(item._id));
+    navigate('/checkout', { state: { selectedItems: selectedCartItems } });
   };
 
   const handleDelete = async () => {

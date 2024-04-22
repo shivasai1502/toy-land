@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../css/CategoryProducts.css';
@@ -21,48 +21,8 @@ const CategoryProducts = () => {
     fetchProducts();
   }, [categoryId]);
 
-  const addToCart = async (productId) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-      await axios.post(
-        'http://localhost:5000/api/cart/insert',
-        { product_id: productId },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-    }
-  };
-
-  const addToWishlist = async (productId) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-      await axios.post(
-        'http://localhost:5000/api/wishlist/insert',
-        { product_id: productId },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-    } catch (error) {
-      console.error('Error adding to wishlist:', error);
-    }
+  const handleProductClick = (product) => {
+    navigate(`/view-individual-product/${product._id}`, { state: { product } });
   };
 
   return (
@@ -71,30 +31,20 @@ const CategoryProducts = () => {
         {products.map((product) => (
           <Col key={product._id} md={6} lg={4} xl={3}>
             <Card className="product-card">
-              <Card.Img variant="top" src={`http://localhost:5000/api/products/images/${product.image_id}`} className="product-img" />
+              <Card.Img
+                variant="top"
+                src={`http://localhost:5000/api/products/images/${product.image_id}`}
+                className="product-img"
+              />
               <Card.Body>
                 <Card.Title>
-                  <span className="card-text-bold">Toy Name:</span> {product.name}
+                  <a href="#" className="name-link" onClick={(e) => { e.preventDefault(); handleProductClick(product); }}>
+                    {product.name}
+                  </a>
                 </Card.Title>
-                <Card.Text>
-                  <span className="card-text-bold">Description:</span>{' '}
-                  <span className="description">{product.description}</span>
-                </Card.Text>
                 <Card.Text>
                   <span className="card-price">Price:</span> ${product.price}
                 </Card.Text>
-                <div className="button-container">
-                  <div>
-                    <Button variant="primary" onClick={() => addToCart(product._id)}>
-                      Add to Cart
-                    </Button>
-                  </div>
-                  <div>
-                    <Button variant="secondary" onClick={() => addToWishlist(product._id)}>
-                      Add to Wishlist
-                    </Button>
-                  </div>
-                </div>
               </Card.Body>
             </Card>
           </Col>

@@ -46,9 +46,6 @@ const Navbar = () => {
           </div>
         </li>
         <li>
-          <Link to="/wishlist">Wishlist</Link>
-        </li>
-        <li>
           <Link to="/cart">Cart</Link>
         </li>
         {token ? (
