@@ -1,25 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../css/Navbar.css';
 import ToyLogo from '../toy_images/toy-land-logo1.png';
 
-const categories = [
-  { name: "Action Figures", link: "/action-figures" },
-  { name: "Dolls", link: "/dolls" },
-  { name: "Stuffed Animals", link: "/stuffed-animals" },
-  { name: "Building Blocks and Construction", link: "/building-blocks-and-construction" },
-  { name: "Sets", link: "/sets" },
-  { name: "Puzzles", link: "/puzzles" },
-  { name: "Board Games", link: "/board-games" },
-  { name: "Card Games", link: "/card-games" },
-  { name: "Educational Toys", link: "/educational-toys" },
-  { name: "Arts and Crafts", link: "/arts-and-crafts" },
-  { name: "Outdoor Toys", link: "/outdoor-toys" },
-];
-
 const Navbar = () => {
+  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/categories/all');
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -35,12 +36,9 @@ const Navbar = () => {
         <li className="dropdown">
           <Link>Shop</Link>
           <div className="dropdown-content">
-            {categories.map((category, index) => (
-              <a
-                key={index}
-                href={`/category/${category.link.slice(1)}`}
-              >
-                {category.name}
+            {categories.map((category) => (
+              <a key={category._id} href={`/category/${category.link}`}>
+                {category.CategoryName}
               </a>
             ))}
           </div>
@@ -53,8 +51,10 @@ const Navbar = () => {
             <Link>Account</Link>
             <div className="dropdown-content">
               <Link to="/profile">Profile</Link>
-              <Link to="/purchase-history">Purchase History</Link>
-              <a href="/login" onClick={handleLogout}>Sign Out</a>
+              <Link to="/customer-orders">Orders</Link>
+              <a href="/login" onClick={handleLogout}>
+                Sign Out
+              </a>
             </div>
           </li>
         ) : (
@@ -67,6 +67,6 @@ const Navbar = () => {
       </ul>
     </nav>
   );
-}
+};
 
 export default Navbar;

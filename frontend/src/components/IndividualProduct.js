@@ -31,6 +31,7 @@ const IndividualProduct = () => {
       setTimeout(() => {
         setButtonText('Add to Cart');
       }, 2000);
+      navigate('/cart');
       // Show success message or perform any other action
     } catch (error) {
       console.error('Error adding to cart:', error);
