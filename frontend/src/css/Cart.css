@@ -65,6 +65,7 @@
   align-items: center;
   flex-basis: 20%;
   justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .cart-item-quantity button {

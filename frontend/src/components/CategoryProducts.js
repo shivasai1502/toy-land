@@ -14,6 +14,7 @@ const CategoryProducts = () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/products/category?category=${categoryId}`);
         setProducts(response.data);
+        console.log(response.data[0].stock);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -38,12 +39,24 @@ const CategoryProducts = () => {
               />
               <Card.Body>
                 <Card.Title>
-                  <a href="#" className="name-link" onClick={(e) => { e.preventDefault(); handleProductClick(product); }}>
+                  <a
+                    href="#"
+                    className={`name-link ${product.stock === 0 ? 'disabled-link' : ''}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (product.stock !== 0) {
+                        handleProductClick(product);
+                      }
+                    }}
+                  >
                     {product.name}
                   </a>
                 </Card.Title>
-                <Card.Text>
-                  <span className="card-price">Price:</span> ${product.price}
+                <Card.Text className="card-price">
+                  Price: ${product.price}
+                </Card.Text>
+                <Card.Text className={`card-stock ${product.stock === 0 ? 'out-of-stock' : ''}`}>
+                  {product.stock === 0 ? 'Out of Stock' : `Stock: ${product.stock}`}
                 </Card.Text>
               </Card.Body>
             </Card>

@@ -65,6 +65,7 @@ const CustomerOrder = () => {
     return (
         <div className="customer-order-container">
             <h2>Orders</h2>
+            <p className='note'>Note: Returns are not possible once Items are Delivered.</p>
             {orders.length === 0 ? (
                 <p>No orders found.</p>
             ) : (
@@ -83,11 +84,11 @@ const CustomerOrder = () => {
                     <tbody>
                         {orders.map((order) => (
                             <tr key={order._id}>
-                                <td>{order._id}</td>
+                                <td>{order._id.slice(-5)}</td>
                                 <td>
-                                    {order.items.map((item) => (
+                                    {order.items.map((item, index) => (
                                         <p key={item.product_id}>
-                                            {item.name} <span className="quantity">x {item.quantity}</span>
+                                            {index + 1}. {item.name} <span className="quantity">x {item.quantity}</span>
                                         </p>
                                     ))}
                                 </td>

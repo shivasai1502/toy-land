@@ -31,7 +31,7 @@ def place_order(user):
     order_data = request.json
     items = order_data.get('items')
     cost = order_data.get('cost')
-    tax_rate = order_data.get('taxRate')
+    tax = order_data.get('tax')
     discount = order_data.get('discount')
     card_details = order_data.get('cardDetails')
     email = user['email']
@@ -41,6 +41,17 @@ def place_order(user):
     
     if not items or not cost or not email or not address:
         return jsonify({'error': 'Required fields are missing'}), 400
+
+    # Update stock for each item
+    for item in items:
+        product = db.products.find_one({'_id': ObjectId(item['_id'])})
+        new_stock = product['stock'] - item['quantity']
+        if new_stock < 0:
+            return jsonify({'error': 'Insufficient stock for product: ' + product['name']}), 400
+        db.products.update_one(
+            {'_id': ObjectId(item['_id'])},
+            {'$set': {'stock': new_stock}}
+        )
 
     payment_id = None
     if card_details:
@@ -73,7 +84,7 @@ def place_order(user):
         'userId': user['_id'],
         'items': items,
         'cost': cost,
-        'taxRate': tax_rate,
+        'tax': tax,
         'discount': discount,
         'paymentId': payment_id,
         'email': email,
@@ -108,17 +119,10 @@ def get_customer_orders(user):
             }
             order_items.append(order_item)
         
-        # Calculate the number of days between the current date and the delivery date
-        delivery_time = order['deliveryTime']
         cancellation_eligible = False
-        if order['deliveryStatus'] == 'Delivered' and delivery_time:
-            current_time = datetime.now()
-            time_diff = current_time - delivery_time
-            days_diff = time_diff.days
-            cancellation_eligible = days_diff <= 5
-        else:
-            cancellation_eligible = order['deliveryStatus'] != 'Delivered'
-        
+        if order['deliveryStatus'] == 'Pending':
+            cancellation_eligible = True
+                    
         customer_order = {
             '_id': str(order['_id']),
             'items': order_items,
@@ -127,7 +131,7 @@ def get_customer_orders(user):
             'orderTime': order['orderTime'].strftime('%Y-%m-%d %H:%M:%S'),
             'cancellationEligible': cancellation_eligible,
             'refundMessage': order.get('refundMessage', ''),
-            'deliveryTime': delivery_time.strftime('%Y-%m-%d %H:%M:%S') if delivery_time else "Not yet delivered"
+            'deliveryTime': order['deliveryTime'].strftime('%Y-%m-%d %H:%M:%S') if order['deliveryTime'] else "Not yet delivered"
         }
         customer_orders.append(customer_order)
     
@@ -144,6 +148,15 @@ def cancel_order(user, order_id):
     
     if order['deliveryStatus'] == 'Cancelled':
         return jsonify({'error': 'Order is already cancelled'}), 400
+
+    # Update stock for each item
+    for item in order['items']:
+        product = db.products.find_one({'_id': ObjectId(item['_id'])})
+        new_stock = product['stock'] + item['quantity']
+        db.products.update_one(
+            {'_id': ObjectId(item['_id'])},
+            {'$set': {'stock': new_stock}}
+        )
     
     refund_amount = order['cost']
     refund_message = f"Refund of ${refund_amount} issued to your bank account."

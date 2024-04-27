@@ -4,10 +4,10 @@ import HeroImage from '../toy_images/image.jpg';
 const Hero = () => {
     return (
         <div>
-            <h1 className='hero-title'>Welcome to Toy Land</h1>
-            <h1 className='hero-title'> Find the perfect Toy for your Joy</h1>
+            <h2 className='hero-title'>Welcome to Toy Land</h2>
+            <h2 className='hero-title'> Find the perfect Toy for your Joy</h2>
             <img src={HeroImage} alt="Random" className='hero-photo' />
-            <h2 className='hero-title-h'>"Toys for Every Age and Interest"</h2>
+            <h2 className='hero-title-h'>Explore the Categories</h2>
         </div>
     );
 };

@@ -82,3 +82,19 @@ def get_user(current_user):
         'email': current_user['email']
     }
     return jsonify(user_data), 200
+
+
+@auth_routes.route('/forget-password', methods=['POST'])
+def forget_password():
+    data = request.get_json()
+    email = data.get('email')
+    new_password = data.get('newPassword')
+
+    customer = db.customer.find_one({'email': email})
+
+    if customer:
+        hashed_password = generate_password_hash(new_password)
+        db.customer.update_one({'email': email}, {'$set': {'password': hashed_password}})
+        return jsonify({'message': 'Password reset successful'}), 200
+    else:
+        return jsonify({'message': 'Email not found'}), 404

@@ -29,10 +29,23 @@
   -webkit-line-clamp: unset;
 }
 
+.card-text {
+  margin-bottom: 2px;
+}
 
-.card-price {
+.card-price,
+.card-stock {
+  font-weight: normal;
+  font-size: 1rem;
+}
+
+.card-stock {
+  color: gray;
+}
+
+.out-of-stock {
+  color: red;
   font-weight: bold;
-  font-size: 1.05rem;
 }
 
 .name-link {
@@ -45,9 +58,16 @@
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
+  margin-bottom: 10px;
 }
 
 .name-link:hover {
   text-decoration: underline;
   cursor: pointer;
+}
+
+.disabled-link {
+  pointer-events: none;
+  color: gray;
+  text-decoration: none;
 }

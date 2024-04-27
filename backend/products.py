@@ -19,12 +19,12 @@ def get_products_by_category():
         return jsonify({"error": "Category ID is required"}), 400
     
     if category_id == "view-all-products":
-        products = list(product_collection.find({}, {'_id': 1, 'name': 1, 'description': 1, 'price': 1, 'category': 1, 'age_range': 1, 'image_id': 1})) 
+        products = list(product_collection.find({}, {'_id': 1, 'name': 1, 'description': 1, 'price': 1, 'category': 1, 'age_range': 1, 'image_id': 1, 'stock': 1})) 
         for product in products:
             product['_id'] = str(product['_id'])
             product['image'] = get_image_url(product['image_id'])
     else:
-        products = list(product_collection.find({'category': category_id}, {'_id': 1, 'name': 1, 'description': 1, 'price': 1, 'category': 1, 'age_range': 1, 'image_id': 1}))
+        products = list(product_collection.find({'category': category_id}, {'_id': 1, 'name': 1, 'description': 1, 'price': 1, 'category': 1, 'age_range': 1, 'image_id': 1, 'stock': 1}))
         for product in products:
             product['_id'] = str(product['_id'])
             product['image'] = get_image_url(product['image_id'])
@@ -34,8 +34,8 @@ def get_products_by_category():
 def get_image(image_id):
     try:
         image_file = fs.get(ObjectId(image_id))
-        print(f"Image file found: {image_file.filename}")
-        print(f"Image file length: {image_file.length}")
+        #print(f"Image file found: {image_file.filename}")
+        #print(f"Image file length: {image_file.length}")
         return send_file(
             BytesIO(image_file.read()),
             mimetype='image/jpeg',

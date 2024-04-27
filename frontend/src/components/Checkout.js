@@ -16,6 +16,7 @@ const Checkout = () => {
   const [couponCode, setCouponCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [couponError, setCouponError] = useState('');
+  const [phoneNumberError, setPhoneNumberError] = useState('');
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -90,6 +91,11 @@ const Checkout = () => {
   const handleProceedToPayment = async () => {
     if (!selectedAddress) {
       alert('Please select a delivery address');
+      return;
+    }
+
+    if (!useExistingNumber && !newPhoneNumber) {
+      setPhoneNumberError('Please enter a phone number');
       return;
     }
 
@@ -216,9 +222,14 @@ const Checkout = () => {
               className="new-number-input"
               placeholder="Enter new phone number"
               value={newPhoneNumber}
-              onChange={(e) => setNewPhoneNumber(e.target.value)}
+              onChange={(e) => {
+                setNewPhoneNumber(e.target.value);
+                setPhoneNumberError('');
+              }}
+              required
             />
           )}
+          {phoneNumberError && <p className="phone-number-error">{phoneNumberError}</p>}
         </div>
       </div>
       <div className="coupon-code">
@@ -264,4 +275,4 @@ const Checkout = () => {
   );
 };
 
-export default Checkout; 
+export default Checkout;

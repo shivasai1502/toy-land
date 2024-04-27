@@ -24,6 +24,8 @@ p {
 
 span {
   font-size: 12px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 a {
@@ -44,6 +46,7 @@ button {
   letter-spacing: 1px;
   text-transform: uppercase;
   transition: transform 80ms ease-in;
+  margin-top: 20px;
 }
 
 button:active {
@@ -72,10 +75,10 @@ form {
 
 input {
   background-color: #eee;
-  border: none;
+  border: black;
   padding: 12px 15px;
-  margin: 8px 0;
-  width: 100%;
+  margin: 8px 2px;
+  width: 70%;
 }
 
 .Login {

@@ -8,30 +8,35 @@ const SignUpForm = () => {
   const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-
   const navigate = useNavigate();
 
   const handleRegistration = async (e) => {
     e.preventDefault();
-
     if (!validateName(firstname) || !validateName(lastname)) {
       setError("Names must contain only alphabets");
       return;
     }
-
     if (!validateEmail(email)) {
       setError("Invalid email address");
       return;
     }
-
     if (!validatePassword(password)) {
       setError("Password must be at least 8 characters long");
       return;
     }
-
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
     try {
-      await axios.post('http://localhost:5000/api/auth/register', { firstname, lastname, email, password });
+      await axios.post('http://localhost:5000/api/auth/register', {
+        firstname,
+        lastname,
+        email,
+        password,
+      });
       setError("User Registered Successfully");
       navigate('/login');
     } catch (error) {
@@ -90,13 +95,19 @@ const SignUpForm = () => {
           placeholder="Password"
           required
         />
+        <input
+          type="password"
+          name="confirm_password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Confirm Password"
+          required
+        />
         <button type="submit">Sign Up</button>
-        {error && (
-          <div className="error-message">{error}</div>
-        )}
+        {error && <div className="error-message">{error}</div>}
       </form>
     </div>
   );
-}
+};
 
 export default SignUpForm;

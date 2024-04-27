@@ -114,9 +114,12 @@ const Payment = () => {
       }
 
       const orderData = {
-        items: selectedItems,
+        items: selectedItems.map((item) => ({
+          _id: item._id,
+          quantity: item.quantity,
+        })),
         cost: totalCost,
-        taxRate: location.state.taxRate,
+        tax: location.state.tax,
         discount: location.state.discount,
         cardDetails: useExistingPayment
           ? null
@@ -162,26 +165,27 @@ const Payment = () => {
 
   return (
     <div className="payment-container">
-      <h2>Payment</h2>
-      <div className="order-summary">
-        <h3>Order Summary</h3>
-        <p>Total Cost: ${totalCost.toFixed(2)}</p>
-        <p>Number of Items: {selectedItems.length}</p>
+      <h2 className="payment-title">Payment</h2>
+      <div className="payment-order-summary">
+        <h3 className="payment-order-summary-title">Order Summary</h3>
+        <p className="payment-order-summary-text">Total Cost: ${totalCost.toFixed(2)}</p>
+        <p className="payment-order-summary-text">Number of Items: {selectedItems.length}</p>
       </div>
       <div className="payment-method">
-        <h3>Payment Method</h3>
+        <h3 className="payment-method-title">Payment Method</h3>
         {savedPaymentMethods.length > 0 && (
-          <div className="saved-payment-methods">
-            <label>
+          <div className="payment-saved-methods">
+            <label className="payment-saved-label">
               <input
                 type="checkbox"
                 checked={useExistingPayment}
                 onChange={(e) => setUseExistingPayment(e.target.checked)}
               />
-              Use existing payment method
+              <span className="payment-saved-text">Use existing payment method</span>
             </label>
             {useExistingPayment && (
               <select
+                className="payment-saved-select"
                 value={paymentMethod}
                 onChange={handlePaymentMethodChange}
               >
@@ -198,28 +202,18 @@ const Payment = () => {
         {!useExistingPayment && (
           <>
             <div className="payment-options">
-              <label>
+              <label className="payment-option-label">
                 <input
                   type="radio"
-                  value="credit-card"
-                  checked={paymentMethod === 'credit-card'}
+                  value="card"
+                  checked={paymentMethod === 'card'}
                   onChange={handlePaymentMethodChange}
                 />
-                Credit Card
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  value="debit-card"
-                  checked={paymentMethod === 'debit-card'}
-                  onChange={handlePaymentMethodChange}
-                />
-                Debit Card
+                <span className="payment-option-text">Credit / Debit Card</span>
               </label>
             </div>
-            {(paymentMethod === 'credit-card' ||
-              paymentMethod === 'debit-card') && (
-              <div className="card-details">
+            {paymentMethod === 'card' && (
+              <div className="payment-card-details">
                 <input
                   type="text"
                   placeholder="Cardholder Name"
@@ -247,13 +241,13 @@ const Payment = () => {
                   onChange={handleCvvChange}
                   maxLength={3}
                 />
-                <label>
+                <label className="payment-save-card-label">
                   <input
                     type="checkbox"
                     checked={saveCardDetails}
                     onChange={(e) => setSaveCardDetails(e.target.checked)}
                   />
-                  Save card details
+                  <span className="payment-save-card-text">Save Card Details</span>
                 </label>
                 {saveCardDetails && (
                   <input
@@ -268,7 +262,7 @@ const Payment = () => {
           </>
         )}
       </div>
-      <button className="button-payment" onClick={placeOrder}>
+      <button className="payment-button" onClick={placeOrder}>
         Pay
       </button>
     </div>

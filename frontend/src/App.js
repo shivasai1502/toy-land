@@ -10,6 +10,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import IndividualProductPage from './pages/IndividualProductPage';
 import PaymentPage from './pages/PaymentPage';
 import CustomerOrdersPage from './pages/CustomerOrdersPage';
+import ForgetPasswordPage  from './pages/ForgetPasswordPage';
 
 const App = () => {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ const App = () => {
         <Route path="/view-individual-product/:productId" element={<IndividualProductPage />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/customer-orders" element={<CustomerOrdersPage />} />
+        <Route path="/forget-password" element={<ForgetPasswordPage />} />
       </Routes>
     </div>
   );

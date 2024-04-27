@@ -22,8 +22,8 @@ def get_categories():
 def get_image(image_id):
     try:
         image_file = fs.get(ObjectId(image_id))
-        print(f"Image file found: {image_file.filename}")
-        print(f"Image file length: {image_file.length}")
+        #print(f"Image file found: {image_file.filename}")
+        #print(f"Image file length: {image_file.length}")
         return send_file(
             BytesIO(image_file.read()),
             mimetype='image/png',

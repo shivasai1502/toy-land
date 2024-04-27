@@ -54,6 +54,9 @@ const IndividualProduct = () => {
           <div className="product-description">
             <p>Description: {product.description}</p>
           </div>
+          <div className="product-description">
+            <p>Stock: {product.stock}</p>
+          </div>
           <Button variant="primary" className="add-to-cart-btn" onClick={addToCart}>
             {buttonText}
           </Button>

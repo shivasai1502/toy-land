@@ -8,7 +8,7 @@ import pandas as pd
 client = MongoClient('localhost', 27017)
 db = client['toy_store']
 fs = GridFS(db)
-collection = db['categories']
+collection = db['products']
 
 # Read the CSV file
 df = pd.read_csv('products.csv')
@@ -27,9 +27,13 @@ for _, row in df.iterrows():
 
     # Create the product document
     product = {
-        'CategoryName': row['name'],
-        'link': row['link'],
-        'image_id': image_id
+        'name': row['name'],
+        'description': row['description'],
+        'price': row['price'],
+        'category': row['category'],
+        'age_range': row['age_range'],
+        'image_id': image_id,
+        'stock': row['stock']
     }
 
     # Store the product in the 'products' collection
