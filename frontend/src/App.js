@@ -11,6 +11,8 @@ import IndividualProductPage from './pages/IndividualProductPage';
 import PaymentPage from './pages/PaymentPage';
 import CustomerOrdersPage from './pages/CustomerOrdersPage';
 import ForgetPasswordPage  from './pages/ForgetPasswordPage';
+import AdminLoginPage from './pages/AdminLoginPage';
+import AdminHomePage from './pages/AdminHomePage';
 
 const App = () => {
   const navigate = useNavigate();
@@ -50,6 +52,8 @@ const App = () => {
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/customer-orders" element={<CustomerOrdersPage />} />
         <Route path="/forget-password" element={<ForgetPasswordPage />} />
+        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route path="/admin/home" element={<AdminHomePage />} />
       </Routes>
     </div>
   );
