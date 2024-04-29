@@ -14,7 +14,7 @@ const AdminNavbar = () => {
 
   return (
     <nav className="navbar">
-      <Link to="/">
+      <Link to="/admin/home">
         <img src={ToyLogo} alt="Company Logo" />
       </Link>
       <ul>

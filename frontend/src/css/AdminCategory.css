@@ -1,0 +1,104 @@
+.admin-category-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.admin-category-form {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input[type='text'],
+.form-group input[type='file'] {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.form-actions button {
+  margin-left: 10px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+
+.admin-category-table-container {
+  overflow-x: auto;
+}
+
+.admin-category-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-category-table th,
+.admin-category-table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.admin-category-table th {
+  background-color: #f2f2f2;
+}
+
+.admin-category-actions {
+  display: flex;
+  align-items: center;
+}
+
+.admin-category-actions button {
+  margin-right: 10px;
+}
+
+.admin-category-edit-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-category-edit-form input[type='text'],
+.admin-category-edit-form input[type='file'] {
+  margin-bottom: 10px;
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+button {
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+button svg {
+  margin-right: 5px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}

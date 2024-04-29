@@ -13,6 +13,10 @@ import CustomerOrdersPage from './pages/CustomerOrdersPage';
 import ForgetPasswordPage  from './pages/ForgetPasswordPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminHomePage from './pages/AdminHomePage';
+import AdminCategoryPage from './pages/AdminCategoryPage';
+import AdminProductsPage from './pages/AdminProductsPage';
+import AdminHandleOrdersPage from './pages/AdminHandleOrdersPage';
+import AdminProductViewPage from './pages/AdminProductViewPage';
 
 const App = () => {
   const navigate = useNavigate();
@@ -54,6 +58,10 @@ const App = () => {
         <Route path="/forget-password" element={<ForgetPasswordPage />} />
         <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route path="/admin/home" element={<AdminHomePage />} />
+        <Route path="/admin/categories" element={<AdminCategoryPage />} />
+        <Route path="/admin/products" element={<AdminProductsPage />} />
+        <Route path="/admin/handle-orders" element={<AdminHandleOrdersPage />} />
+        <Route path="/admin/product/:productId" element={<AdminProductViewPage />} />
       </Routes>
     </div>
   );

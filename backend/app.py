@@ -8,6 +8,8 @@ from admin_order_utility_details import admin_order_utility_details_bp
 from order import order_bp
 from categories import category_bp
 from admin_routes import admin_routes
+from admin_category import admin_category_bp
+from admin_products import admin_toys_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -20,6 +22,8 @@ app.register_blueprint(admin_order_utility_details_bp, url_prefix='/api/admin_or
 app.register_blueprint(order_bp, url_prefix='/api/orders' )
 app.register_blueprint(category_bp, url_prefix='/api/categories')
 app.register_blueprint(admin_routes, url_prefix='/api/admin')
+app.register_blueprint(admin_category_bp, url_prefix='/api/admin/category')
+app.register_blueprint(admin_toys_bp, url_prefix='/api/admin/product')
 
 if __name__ == '__main__':
     app.run(debug=True)

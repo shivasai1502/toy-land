@@ -55,6 +55,9 @@ const IndividualProduct = () => {
             <p>Description: {product.description}</p>
           </div>
           <div className="product-description">
+            <p>Age Range: {product.age_range} Years +</p>
+          </div>
+          <div className="product-description">
             <p>Stock: {product.stock}</p>
           </div>
           <Button variant="primary" className="add-to-cart-btn" onClick={addToCart}>
