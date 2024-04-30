@@ -16,7 +16,8 @@ const AdminLogin = () => {
         email,
         password,
       });
-      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('admin_token', response.data.admin_token);
+      console.log(response.data.admin_token);
       setMessage({ text: 'Login successful', type: 'success' });
       setTimeout(() => {
         navigate('/admin/home');

@@ -249,25 +249,30 @@ const Checkout = () => {
         <h3>Order Summary</h3>
         <div className="summary-item">
           <span>Subtotal:</span>
-          <span>${selectedItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}</span>
+          <span>${selectedItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)}</span>
         </div>
         <div className="summary-item">
           <span>Tax ({taxRate * 100}%):</span>
-          <span>${(selectedItems.reduce((total, item) => total + item.price * item.quantity, 0) * taxRate).toFixed(2)}</span>
+          <span>${(selectedItems.reduce((total, item) => total + (item.price * item.quantity), 0) * taxRate).toFixed(2)}</span>
         </div>
         <div className="summary-item">
           <span>Delivery Charge:</span>
-          <span>${deliveryCharge.toFixed(2)}</span>
+          <span>${deliveryCharge}</span>
         </div>
         {discount > 0 && (
           <div className="summary-item">
             <span>Discount ({discount}%):</span>
-            <span>-${(selectedItems.reduce((total, item) => total + item.price * item.quantity, 0) * (discount / 100)).toFixed(2)}</span>
+            <span>-${(selectedItems.reduce((total, item) => total + (item.price * item.quantity), 0) * (discount / 100)).toFixed(2)}</span>
           </div>
         )}
         <div className="summary-item total">
           <span>Total Cost:</span>
-          <span>${(selectedItems.reduce((total, item) => total + item.price * item.quantity, 0) * (1 + taxRate) + deliveryCharge - (selectedItems.reduce((total, item) => total + item.price * item.quantity, 0) * (discount / 100))).toFixed(2)}</span>
+          <span>${(
+            selectedItems.reduce((total, item) => total + (item.price * item.quantity), 0) +
+            selectedItems.reduce((total, item) => total + (item.price * item.quantity), 0) * taxRate +
+            deliveryCharge -
+            selectedItems.reduce((total, item) => total + (item.price * item.quantity), 0) * (discount / 100)
+          ).toFixed(2)}</span>
         </div>
       </div>
       <button onClick={handleProceedToPayment}>Proceed to Payment</button>

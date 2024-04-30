@@ -36,7 +36,7 @@
 }
 
 .admin-home-toy-info {
-  background-color: #d769a0;
+  background-color: #8ea6e9;
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -50,6 +50,7 @@
   margin-bottom: 10px;
   font-size: 24px;
   font-weight: bold;
+  text-align: center;
 }
 
 .admin-home-table {
@@ -86,7 +87,7 @@
 
 .admin-home-utility-item input {
   margin-left: 10px;
-  width: 70%;
+  width: 30%;
 }
 
 .admin-home-utility-actions {
@@ -115,12 +116,12 @@
   margin: 8px 2px;
   width: 60%;
   font-family: Arial, sans-serif;
-  font-size: 16px;
+  font-size: 12px;
 }
 
 .admin-home-coupon-form input {
   margin-right: 10px;
-  width: 70%;
+  width: 50%;
 }
 
 .admin-home-coupon-form svg {

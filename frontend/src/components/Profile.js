@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../css/Profile.css';
+import { FaEdit } from 'react-icons/fa';
 
 const Profile = () => {
   const [profile, setProfile] = useState({
@@ -10,7 +11,8 @@ const Profile = () => {
     phone_number: '',
     addresses: [],
   });
-  const [isChanged, setIsChanged] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedProfile, setEditedProfile] = useState({ ...profile });
 
   useEffect(() => {
     fetchProfile();
@@ -34,49 +36,51 @@ const Profile = () => {
     }
   };
 
+  const handleEdit = () => {
+    setEditedProfile({ ...profile });
+    setIsEditing(true);
+  };
+
   const handleChange = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
-    setIsChanged(true);
+    const { name, value } = e.target;
+    setEditedProfile((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const handleAddressChange = (index, field, value) => {
-    const updatedAddresses = [...profile.addresses];
+    const updatedAddresses = [...editedProfile.addresses];
     updatedAddresses[index] = { ...updatedAddresses[index], [field]: value };
-    setProfile({ ...profile, addresses: updatedAddresses });
-    setIsChanged(true);
+    setEditedProfile((prevState) => ({
+      ...prevState,
+      addresses: updatedAddresses,
+    }));
+  };
+
+  const handleDeleteAddress = (index) => {
+    const updatedAddresses = [...editedProfile.addresses];
+    updatedAddresses.splice(index, 1);
+    setEditedProfile((prevState) => ({
+      ...prevState,
+      addresses: updatedAddresses,
+    }));
   };
 
   const handleAddAddress = () => {
-    setProfile({
-      ...profile,
-      addresses: [...profile.addresses, { address_line_1: '', address_line_2: '', city: '', state: '', zipcode: '' }],
-    });
-    setIsChanged(true);
-  };
-
-  const handleDeleteAddress = async (index) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        // Redirect to login page if token is not available
-        return;
-      }
-      await axios.delete('http://localhost:5000/api/profile/delete-address', {
-        headers: {
-          Authorization: `Bearer ${token}`,
+    setEditedProfile((prevState) => ({
+      ...prevState,
+      addresses: [
+        ...prevState.addresses,
+        {
+          address_line_1: '',
+          address_line_2: '',
+          city: '',
+          state: '',
+          zipcode: '',
         },
-        data: {
-          address_index: index,
-        },
-      });
-      setProfile({
-        ...profile,
-        addresses: profile.addresses.filter((_, i) => i !== index),
-      });
-      setIsChanged(true);
-    } catch (error) {
-      console.error('Error deleting address:', error);
-    }
+      ],
+    }));
   };
 
   const handleSave = async () => {
@@ -86,106 +90,176 @@ const Profile = () => {
         // Redirect to login page if token is not available
         return;
       }
-      await axios.put('http://localhost:5000/api/profile/update', profile, {
+      await axios.put('http://localhost:5000/api/profile/update', editedProfile, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       alert('Profile updated successfully');
-      setIsChanged(false);
+      setIsEditing(false);
+      fetchProfile();
     } catch (error) {
       console.error('Error updating profile:', error);
     }
   };
 
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
+
   return (
     <div className="profile-container">
-      <h2>Profile</h2>
-      <div className="profile-fields">
-        <div className="profile-field">
-          <label>First Name:</label>
-          <input type="text" name="firstname" value={profile.firstname} onChange={handleChange} />
-        </div>
-        <div className="profile-field">
-          <label>Last Name:</label>
-          <input type="text" name="lastname" value={profile.lastname} onChange={handleChange} />
-        </div>
-      </div>
-      <div className="profile-fields">
-        <div className="profile-field">
-          <label>Email:</label>
-          <input type="email" name="email" value={profile.email} onChange={handleChange} />
-        </div>
-        <div className="profile-field">
-          <label>Phone Number:</label>
-          <input type="text" name="phone_number" value={profile.phone_number || ''} onChange={handleChange} />
-        </div>
-      </div>
-      <div className="profile-addresses">
-        <h3>Addresses</h3>
-        {profile.addresses.length === 0 ? (
-          <p>No addresses found. Please add an address.</p>
-        ) : (
-          profile.addresses.map((address, index) => (
-            <div key={index} className="profile-address">
-              <div className="profile-address-fields">
-                <div className="profile-address-field">
-                  <label>Address Line 1:</label>
-                  <input
-                    type="text"
-                    value={address.address_line_1}
-                    onChange={(e) => handleAddressChange(index, 'address_line_1', e.target.value)}
-                  />
-                </div>
-                <div className="profile-address-field">
-                  <label>Address Line 2:</label>
-                  <input
-                    type="text"
-                    value={address.address_line_2}
-                    onChange={(e) => handleAddressChange(index, 'address_line_2', e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="profile-address-fields">
-                <div className="profile-address-field">
-                  <label>City:</label>
-                  <input
-                    type="text"
-                    value={address.city}
-                    onChange={(e) => handleAddressChange(index, 'city', e.target.value)}
-                  />
-                </div>
-                <div className="profile-address-field">
-                  <label>State:</label>
-                  <input
-                    type="text"
-                    value={address.state}
-                    onChange={(e) => handleAddressChange(index, 'state', e.target.value)}
-                  />
-                </div>
-                <div className="profile-address-field">
-                  <label>Zipcode:</label>
-                  <input
-                    type="text"
-                    value={address.zipcode}
-                    onChange={(e) => handleAddressChange(index, 'zipcode', e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="profile-address-delete">
-                <button onClick={() => handleDeleteAddress(index)}>Delete</button>
-              </div>
-            </div>
-          ))
+      <h2 className="profile-title">
+        Profile
+        {!isEditing && (
+          <FaEdit className="edit-icon" onClick={handleEdit} />
         )}
-        <div className="profile-add-address">
-          <button onClick={handleAddAddress}>Add Address</button>
+      </h2>
+      <div className="profile-card">
+        <div className="profile-field">
+          <label className="profile-label">First Name:</label>
+          {isEditing ? (
+            <input
+              type="text"
+              name="firstname"
+              value={editedProfile.firstname}
+              onChange={handleChange}
+              className="profile-input"
+            />
+          ) : (
+            <span className="profile-value">{profile.firstname}</span>
+          )}
         </div>
-      </div>
-      <div className="profile-save-button">
-        <button onClick={handleSave} disabled={!isChanged}>
-          Save
-        </button>
+        <div className="profile-field">
+          <label className="profile-label">Last Name:</label>
+          {isEditing ? (
+            <input
+              type="text"
+              name="lastname"
+              value={editedProfile.lastname}
+              onChange={handleChange}
+              className="profile-input"
+            />
+          ) : (
+            <span className="profile-value">{profile.lastname}</span>
+          )}
+        </div>
+        <div className="profile-field">
+          <label className="profile-label">Email:</label>
+          {isEditing ? (
+            <input
+              type="email"
+              name="email"
+              value={editedProfile.email}
+              onChange={handleChange}
+              className="profile-input"
+            />
+          ) : (
+            <span className="profile-value">{profile.email}</span>
+          )}
+        </div>
+        <div className="profile-field">
+          <label className="profile-label">Phone Number:</label>
+          {isEditing ? (
+            <input
+              type="text"
+              name="phone_number"
+              value={editedProfile.phone_number}
+              onChange={handleChange}
+              className="profile-input"
+            />
+          ) : (
+            <span className="profile-value">{profile.phone_number}</span>
+          )}
+        </div>
+        <div className="profile-field">
+          <label className="profile-label">Addresses:</label>
+          {!isEditing ? (
+            <ul className="address-list">
+              {profile.addresses.map((address, index) => (
+                <li key={index} className="address-item">
+                  <span className="address-number">{index + 1}.</span>
+                  <span>{address.address_line_1}, {address.address_line_2}, {address.city}, {address.state}, {address.zipcode}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div>
+              {editedProfile.addresses.map((address, index) => (
+                <div key={index} className="address-item">
+                  <div className="address-row">
+                    <input
+                      type="text"
+                      value={address.address_line_1}
+                      onChange={(e) =>
+                        handleAddressChange(index, 'address_line_1', e.target.value)
+                      }
+                      className="address-input"
+                      placeholder="Address Line 1"
+                    />
+                    <input
+                      type="text"
+                      value={address.address_line_2}
+                      onChange={(e) =>
+                        handleAddressChange(index, 'address_line_2', e.target.value)
+                      }
+                      className="address-input"
+                      placeholder="Address Line 2"
+                    />
+                    <input
+                      type="text"
+                      value={address.city}
+                      onChange={(e) =>
+                        handleAddressChange(index, 'city', e.target.value)
+                      }
+                      className="address-input"
+                      placeholder="City"
+                    />
+                    <input
+                      type="text"
+                      value={address.state}
+                      onChange={(e) =>
+                        handleAddressChange(index, 'state', e.target.value)
+                      }
+                      className="address-input"
+                      placeholder="State"
+                    />
+                    <input
+                      type="text"
+                      value={address.zipcode}
+                      onChange={(e) =>
+                        handleAddressChange(index, 'zipcode', e.target.value)
+                      }
+                      className="address-input"
+                      placeholder="Zipcode"
+                    />
+                    <div className="address-actions">
+                      <button
+                        className="delete-btn"
+                        onClick={() => handleDeleteAddress(index)}
+                      >
+                         Delete
+                      </button>
+                      <button className="add-btn" onClick={handleAddAddress}>
+                         Add Address
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        {isEditing && (
+          <div className="profile-actions">
+            <button className="save-btn" onClick={handleSave}>
+               Save
+            </button>
+            <button className="cancel-btn" onClick={handleCancel}>
+              Cancel
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

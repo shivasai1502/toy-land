@@ -113,6 +113,30 @@ const Payment = () => {
         return;
       }
 
+      let cardDetails = null;
+      if (useExistingPayment) {
+        const selectedPaymentMethod = savedPaymentMethods.find(
+          (method) => method._id === paymentMethod
+        );
+        if (selectedPaymentMethod) {
+          cardDetails = {
+            cardholderName: selectedPaymentMethod.cardholderName,
+            cardNumber: selectedPaymentMethod.cardNumber,
+            expiryDate: selectedPaymentMethod.expiryDate,
+            cvv: selectedPaymentMethod.cvv,
+            paymentMethodName: selectedPaymentMethod.paymentMethodName,
+          };
+        }
+      } else if (saveCardDetails) {
+        cardDetails = {
+          cardholderName,
+          cardNumber,
+          expiryDate,
+          cvv,
+          paymentMethodName,
+        };
+      }
+
       const orderData = {
         items: selectedItems.map((item) => ({
           _id: item._id,
@@ -121,17 +145,7 @@ const Payment = () => {
         cost: totalCost,
         tax: location.state.tax,
         discount: location.state.discount,
-        cardDetails: useExistingPayment
-          ? null
-          : saveCardDetails
-          ? {
-              cardholderName,
-              cardNumber,
-              expiryDate,
-              cvv,
-              paymentMethodName,
-            }
-          : null,
+        cardDetails,
         phoneNumber,
         address,
         deliveryStatus: 'Pending',

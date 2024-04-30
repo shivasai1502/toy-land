@@ -1,42 +1,46 @@
 .admin-category-container {
-  max-width: 1000px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+}
+
+.admin-category-container h2{
+  text-align: center;
 }
 
 .admin-category-form {
   margin-bottom: 20px;
 }
 
-.form-group {
+.admin-category-form-group {
   margin-bottom: 10px;
 }
 
-.form-group label {
+.admin-category-form-group label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
 }
 
-.form-group input[type='text'],
-.form-group input[type='file'] {
+.admin-category-form-group input[type='text'],
+.admin-category-form-group input[type='file'] {
   width: 100%;
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
 }
 
-.form-actions {
+.admin-category-form-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 10px;
 }
 
-.form-actions button {
+.admin-category-form-actions button {
   margin-left: 10px;
 }
 
-.error-message {
+.admin-category-error-message {
   color: red;
   margin-top: 10px;
 }
@@ -53,7 +57,7 @@
 .admin-category-table th,
 .admin-category-table td {
   padding: 8px;
-  text-align: left;
+  text-align: center;
   border-bottom: 1px solid #ddd;
 }
 
@@ -63,6 +67,7 @@
 
 .admin-category-actions {
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 
@@ -83,22 +88,18 @@
   border: 1px solid #ccc;
 }
 
-button {
+.admin-category-button {
   display: flex;
   align-items: center;
   padding: 6px 10px;
   border-radius: 4px;
   border: none;
-  background-color: #007bff;
+  background-color: #583442;
   color: #fff;
   cursor: pointer;
   margin-bottom: 20px;
 }
 
-button svg {
+.admin-category-button svg {
   margin-right: 5px;
-}
-
-button:hover {
-  background-color: #0056b3;
 }

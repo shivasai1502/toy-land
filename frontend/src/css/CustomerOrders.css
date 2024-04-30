@@ -1,76 +1,91 @@
 .customer-order-container {
-  max-width: 100%;
-  overflow-x: auto;
   padding: 20px;
 }
 
-.customer-order-container h2 {
+.customer-order-page-title {
   font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.order-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-
-.order-table th,
-.order-table td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #ccc;
-  word-wrap: break-word;
-}
-
-.order-table th {
-  background-color: #f5f5f5;
   font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.order-table td {
-  vertical-align: top;
+.customer-order-items-container {
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.order-table th:nth-child(2),
-.order-table td:nth-child(2) {
-  width: 30%;
+.customer-order-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
 }
 
-.order-table th:not(:nth-child(2)),
-.order-table td:not(:nth-child(2)) {
-  width: calc((70% - (6 * 10px)) / 6);
+.customer-order-item-details {
+  flex: 1;
 }
 
-.order-table button {
+.customer-order-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.customer-order-items-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.customer-order-item-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.customer-order-image-container {
+  width: 100px;
+  height: 100px;
+  margin-right: 20px;
+}
+
+.customer-order-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.customer-order-item-info {
+  flex: 1;
+}
+
+.customer-order-item-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.customer-order-item-quantity {
+  color: #888;
+}
+
+.customer-order-details-button {
   padding: 5px 10px;
-  background-color: #f44336;
+  background-color: #583442;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-.order-table button:hover {
-  background-color: #d32f2f;
-}
-
-@media screen and (max-width: 600px) {
-  .order-table th,
-  .order-table td {
-    padding: 8px;
-    font-size: 14px;
+@media (max-width: 768px) {
+  .customer-order-item-row {
+    flex-direction: column;
+    align-items: flex-start;
   }
-}
 
-.quantity {
-  color: red;
-  font-size: medium;
-  font-weight: bold;
-}
-
-.note {
-  color: red;
-  font-size: medium;
-  font-weight: bold;
+  .customer-order-image-container {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
 }

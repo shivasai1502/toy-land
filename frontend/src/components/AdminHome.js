@@ -12,7 +12,6 @@ const AdminHome = () => {
   const navigate = useNavigate();
   const [utilityData, setUtilityData] = useState(null);
   const [toyData, setToyData] = useState(null);
-  const [deliveryData, setDeliveryData] = useState(null);
   const [taxRate, setTaxRate] = useState('');
   const [deliveryCharge, setDeliveryCharge] = useState('');
   const [couponCode, setCouponCode] = useState('');
@@ -20,21 +19,20 @@ const AdminHome = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    const admin_token = localStorage.getItem('admin_token');
+    if (!admin_token) {
       navigate('/admin/login');
     } else {
-      fetchUtilityData(token);
-      fetchToyData(token);
-      fetchDeliveryData(token);
+      fetchUtilityData(admin_token);
+      fetchToyData(admin_token);
     }
   }, [navigate]);
 
-  const fetchUtilityData = async (token) => {
+  const fetchUtilityData = async (admin_token) => {
     try {
       const response = await axios.get('http://localhost:5000/api/admin/utility', {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${admin_token}`,
         },
       });
       setUtilityData(response.data);
@@ -45,11 +43,11 @@ const AdminHome = () => {
     }
   };
 
-  const fetchToyData = async (token) => {
+  const fetchToyData = async (admin_token) => {
     try {
       const response = await axios.get('http://localhost:5000/api/admin/toys', {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${admin_token}`,
         },
       });
       setToyData(response.data);
@@ -58,28 +56,16 @@ const AdminHome = () => {
     }
   };
 
-  const fetchDeliveryData = async (token) => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/admin/delivery', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setDeliveryData(response.data);
-    } catch (error) {
-      console.error('Error fetching delivery data:', error);
-    }
-  };
 
   const handleSaveUtility = async () => {
-    const token = localStorage.getItem('token');
+    const admin_token = localStorage.getItem('admin_token');
     try {
       await axios.put('http://localhost:5000/api/admin/utility', {
         taxrate: taxRate,
         deliverycharge: deliveryCharge,
       }, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${admin_token}`,
         },
       });
       setIsEditing(false);
@@ -90,35 +76,35 @@ const AdminHome = () => {
   };
 
   const handleAddCoupon = async () => {
-    const token = localStorage.getItem('token');
+    const admin_token = localStorage.getItem('admin_token');
     try {
       await axios.post('http://localhost:5000/api/admin/coupons', {
         code: couponCode,
         discount: couponDiscount,
       }, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${admin_token}`,
         },
       });
       alert('Coupon added successfully');
       setCouponCode('');
       setCouponDiscount('');
-      fetchUtilityData(token);
+      fetchUtilityData(admin_token);
     } catch (error) {
       console.error('Error adding coupon:', error);
     }
   };
 
   const handleDeleteCoupon = async (code) => {
-    const token = localStorage.getItem('token');
+    const admin_token = localStorage.getItem('admin_token');
     try {
       await axios.delete(`http://localhost:5000/api/admin/coupons/${code}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${admin_token}`,
         },
       });
       alert('Coupon deleted successfully');
-      fetchUtilityData(token);
+      fetchUtilityData(admin_token);
     } catch (error) {
       console.error('Error deleting coupon:', error);
     }
@@ -127,20 +113,8 @@ const AdminHome = () => {
   return (
     <div className="admin-home-container">
       <div className="admin-home-left-section">
-        <div className="admin-home-delivery-status">
-          <h2>Deliveries</h2>
-          {deliveryData ? (
-            <div>
-              <p>Delivered Orders: {deliveryData.deliveredOrders}</p>
-              <p>Pending Orders: {deliveryData.pendingOrders}</p>
-              <p>Cancelled Orders: {deliveryData.cancelledOrders}</p>
-            </div>
-          ) : (
-            <p>Loading delivery data...</p>
-          )}
-        </div>
         <div className="admin-home-utility-charges">
-          <h2>Charges</h2>
+          <h2>Charges / Coupons</h2>
           {utilityData ? (
             <div>
               <div className="admin-home-utility-item">

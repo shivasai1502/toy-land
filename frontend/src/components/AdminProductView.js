@@ -20,8 +20,8 @@ const AdminProductView = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    const admin_token = localStorage.getItem('admin_token');
+    if (!admin_token) {
       navigate('/admin/login');
     } else {
       fetchProduct();
@@ -33,7 +33,7 @@ const AdminProductView = () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/admin/product/${productId}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
         },
       });
       const productData = response.data;
@@ -53,7 +53,7 @@ const AdminProductView = () => {
     try {
       const response = await axios.get('http://localhost:5000/api/admin/category/all', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
         },
       });
       setCategories(response.data);
@@ -79,7 +79,7 @@ const AdminProductView = () => {
       await axios.put(`http://localhost:5000/api/admin/product/edit/${productId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
         },
       });
       navigate('/admin/products');
@@ -95,7 +95,7 @@ const AdminProductView = () => {
       try {
         await axios.delete(`http://localhost:5000/api/admin/product/delete/${productId}`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
           },
         });
         navigate('/admin/products');
@@ -113,9 +113,9 @@ const AdminProductView = () => {
   return (
     <div className="admin-product-view-container">
       <h2>Product Details</h2>
-      {error && <p className="error-message">{error}</p>}
+      {error && <p className="admin-product-view-error-message">{error}</p>}
       <form onSubmit={handleSave} className="admin-product-view-form">
-        <div className="form-group">
+        <div className="admin-product-view-form-group">
           <label htmlFor="name">Name:</label>
           <input
             type="text"
@@ -124,7 +124,7 @@ const AdminProductView = () => {
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        <div className="admin-product-view-form-group">
           <label htmlFor="description">Description:</label>
           <textarea
             id="description"
@@ -132,7 +132,7 @@ const AdminProductView = () => {
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>
         </div>
-        <div className="form-group">
+        <div className="admin-product-view-form-group">
           <label htmlFor="price">Price:</label>
           <input
             type="number"
@@ -142,7 +142,7 @@ const AdminProductView = () => {
             onChange={(e) => setPrice(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        <div className="admin-product-view-form-group">
           <label htmlFor="category">Category:</label>
           <select
             id="category"
@@ -157,7 +157,7 @@ const AdminProductView = () => {
             ))}
           </select>
         </div>
-        <div className="form-group">
+        <div className="admin-product-view-form-group">
           <label htmlFor="ageRange">Age Range:</label>
           <input
             type="text"
@@ -166,7 +166,7 @@ const AdminProductView = () => {
             onChange={(e) => setAgeRange(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        <div className="admin-product-view-form-group">
           <label htmlFor="image">Image:</label>
           <input
             type="file"
@@ -175,7 +175,7 @@ const AdminProductView = () => {
             onChange={(e) => setImage(e.target.files[0])}
           />
         </div>
-        <div className="form-group">
+        <div className="admin-product-view-form-group">
           <label htmlFor="stock">Stock:</label>
           <input
             type="number"
@@ -184,7 +184,7 @@ const AdminProductView = () => {
             onChange={(e) => setStock(e.target.value)}
           />
         </div>
-        <div className="form-actions">
+        <div className="admin-product-view-form-actions">
           <button type="submit">
             <TiTick /> Save
           </button>

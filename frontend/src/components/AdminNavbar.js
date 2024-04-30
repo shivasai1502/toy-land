@@ -5,10 +5,10 @@ import ToyLogo from '../toy_images/toy-land-logo1.png';
 
 const AdminNavbar = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const admin_token = localStorage.getItem('admin_token');
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('admin_token');
     navigate('/admin/home');
   };
 
@@ -18,7 +18,7 @@ const AdminNavbar = () => {
         <img src={ToyLogo} alt="Company Logo" />
       </Link>
       <ul>
-        {token ? (
+        {admin_token ? (
           <>
             <li>
               <Link to="/admin/categories">Categories</Link>

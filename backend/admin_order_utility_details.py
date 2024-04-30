@@ -1,12 +1,10 @@
-from flask import Blueprint, request, jsonify, send_file
+from flask import Blueprint, request, jsonify
 from database import db
-from auth_utils import token_required
 
 admin_order_utility_details_bp = Blueprint('admin_order_utility_details_bp', __name__)
 
 @admin_order_utility_details_bp.route('/get-order-utility-details', methods=['GET'])
-@token_required
-def get_order_utility_details(user_id):
+def get_order_utility_details():
     try:
         # Fetch the admin_order_utility_details from the database
         utility_details = db.admin_order_utility_details.find_one()

@@ -1,11 +1,13 @@
 from datetime import datetime
+import json
 from bson import ObjectId
 from flask import Blueprint, request, jsonify
 from flask_mail import Message
 from database import db
 from auth_utils import token_required
 from werkzeug.security import generate_password_hash
-
+from jsonencoder import JSONEncoder
+from datetime import datetime, timedelta
 order_bp = Blueprint('orders', __name__)
 
 @order_bp.route('/payments', methods=['GET'])
@@ -30,19 +32,18 @@ def get_saved_payment_methods(user):
 def place_order(user):
     order_data = request.json
     items = order_data.get('items')
-    cost = order_data.get('cost')
+    total_cost = order_data.get('cost')
     tax = order_data.get('tax')
     discount = order_data.get('discount')
     card_details = order_data.get('cardDetails')
     email = user['email']
+    phone_number = order_data.get('phoneNumber')
     address = order_data.get('address')
-    delivery_status = order_data.get('deliveryStatus')
-    refund_message = order_data.get('refundMessage') if order_data.get('refundMessage') else None
     
-    if not items or not cost or not email or not address:
+    if not items or not total_cost or not email or not address:
         return jsonify({'error': 'Required fields are missing'}), 400
 
-    # Update stock for each item
+    # Update stock and set additional fields for each item
     for item in items:
         product = db.products.find_one({'_id': ObjectId(item['_id'])})
         new_stock = product['stock'] - item['quantity']
@@ -52,7 +53,13 @@ def place_order(user):
             {'_id': ObjectId(item['_id'])},
             {'$set': {'stock': new_stock}}
         )
-
+        item['deliveryStatus'] = 'Pending'
+        estimated_delivery_date = datetime.now() + timedelta(days=5)
+        item['EstimatedDeliveryDate'] = estimated_delivery_date.strftime('%m-%d-%Y')
+        item['RefundMessage'] = None
+        item['DeliveryDate'] = None
+        item['Cost'] = item['quantity'] * product['price']
+        
     payment_id = None
     if card_details:
         # Check if the card number already exists in the payments collection
@@ -61,14 +68,11 @@ def place_order(user):
         if existing_payment:
             payment_id = str(existing_payment['_id'])
         else:
-            # Hash the CVV using a secure hashing algorithm
-            hashed_cvv = generate_password_hash(card_details.get('cvv'))
             # Save card details in the payments collection
             payment = {
                 'cardholderName': card_details.get('cardholderName', ''),
                 'cardNumber': card_details.get('cardNumber'),
                 'expiryDate': card_details.get('expiryDate'),
-                'cvv': hashed_cvv,
                 'email': email,
                 'paymentMethodName': card_details.get('paymentMethodName', '')
             }
@@ -76,30 +80,27 @@ def place_order(user):
             payment_id = str(payment_result.inserted_id)
 
     # Get the current timestamp
-    order_time = datetime.now()
-    delivery_time = None
+    order_time = datetime.now().strftime('%m-%d-%Y %H:%M:%S')
 
     # Create the order object
     order = {
         'userId': user['_id'],
         'items': items,
-        'cost': cost,
+        'Totalcost': total_cost,
         'tax': tax,
         'discount': discount,
         'paymentId': payment_id,
         'email': email,
+        'phoneNumber': phone_number,
         'address': address,
-        'deliveryStatus': delivery_status,
-        'orderTime': order_time,
-        'refundMessage': refund_message,
-        'deliveryTime': delivery_time
+        'orderTime': order_time
     }
 
     # Save the order in the orders collection
     order_result = db.orders.insert_one(order)
     order_id = str(order_result.inserted_id)
 
-    return jsonify({'orderId': order_id}), 201
+    return jsonify({'orderId': order_id }), 201
 
 @order_bp.route('/customer', methods=['GET'])
 @token_required
@@ -115,58 +116,101 @@ def get_customer_orders(user):
             order_item = {
                 'product_id': str(item['_id']),
                 'name': product['name'],
-                'quantity': item['quantity']
+                'quantity': item['quantity'],
+                'image_id': product['image_id'],
+                'deliveryStatus': item['deliveryStatus'],
             }
             order_items.append(order_item)
-        
-        cancellation_eligible = False
-        if order['deliveryStatus'] == 'Pending':
-            cancellation_eligible = True
                     
         customer_order = {
             '_id': str(order['_id']),
             'items': order_items,
-            'cost': order['cost'],
-            'deliveryStatus': order['deliveryStatus'],
-            'orderTime': order['orderTime'].strftime('%Y-%m-%d %H:%M:%S'),
-            'cancellationEligible': cancellation_eligible,
-            'refundMessage': order.get('refundMessage', ''),
-            'deliveryTime': order['deliveryTime'].strftime('%Y-%m-%d %H:%M:%S') if order['deliveryTime'] else "Not yet delivered"
+            'orderTime': order['orderTime'],
         }
         customer_orders.append(customer_order)
     
-    return jsonify(customer_orders), 200
+    return json.dumps(customer_orders, cls=JSONEncoder), 200
 
-@order_bp.route('/<order_id>/cancel', methods=['PUT'])
+@order_bp.route('/<order_id>', methods=['GET'])
 @token_required
-def cancel_order(user, order_id):
+def get_order(user, order_id):
     user_id = user['_id']
     order = db.orders.find_one({'_id': ObjectId(order_id), 'userId': user_id})
     
     if not order:
         return jsonify({'error': 'Order not found'}), 404
-    
-    if order['deliveryStatus'] == 'Cancelled':
-        return jsonify({'error': 'Order is already cancelled'}), 400
 
-    # Update stock for each item
+    order_items = []
     for item in order['items']:
         product = db.products.find_one({'_id': ObjectId(item['_id'])})
-        new_stock = product['stock'] + item['quantity']
-        db.products.update_one(
-            {'_id': ObjectId(item['_id'])},
-            {'$set': {'stock': new_stock}}
-        )
-    
-    refund_amount = order['cost']
-    refund_message = f"Refund of ${refund_amount} issued to your bank account."
-    
+        order_item = {
+            'product_id': str(item['_id']),
+            'name': product['name'],
+            'image_id': product['image_id'],
+            'quantity': item['quantity'],
+            'deliveryStatus': item.get('deliveryStatus'),
+            'EstimatedDeliveryDate': item.get('EstimatedDeliveryDate'),
+            'RefundMessage': item.get('RefundMessage'),
+            'DeliveryDate': item.get('DeliveryDate'),
+            'Cost': item['Cost']
+        }
+        order_items.append(order_item)
+
+    order_details = {
+        '_id': str(order['_id']),
+        'items': order_items,
+        'Totalcost': order['Totalcost'],
+        'tax': order.get('tax'),
+        'discount': order.get('discount'),
+        'paymentId': order.get('paymentId'),
+        'phoneNumber': order.get('phoneNumber'),
+        'address': order['address'],
+        'orderTime': order['orderTime']
+    }
+
+    return json.dumps(order_details, cls=JSONEncoder), 200
+
+
+@order_bp.route('/<order_id>/<item_id>/cancel', methods=['PUT'])
+@token_required
+def cancel_item(user, order_id, item_id):
+    user_id = user['_id']
+    order = db.orders.find_one({'_id': ObjectId(order_id), 'userId': user_id})
+
+    if not order:
+        return jsonify({'error': 'Order not found'}), 404
+
+    item_to_cancel = None
+    for item in order['items']:
+        if str(item['_id']) == item_id:
+            item_to_cancel = item
+            break
+
+    if not item_to_cancel:
+        return jsonify({'error': 'Item not found in the order'}), 404
+
+    if item_to_cancel['deliveryStatus'] != 'Pending':
+        return jsonify({'error': 'Item cannot be cancelled as it is already delivered or in transit'}), 400
+
+    # Update stock for the cancelled item
+    product = db.products.find_one({'_id': ObjectId(item_to_cancel['_id'])})
+    new_stock = product['stock'] + item_to_cancel['quantity']
+    db.products.update_one(
+        {'_id': ObjectId(item_to_cancel['_id'])},
+        {'$set': {'stock': new_stock}}
+    )
+
+    item_to_cancel['deliveryStatus'] = 'Cancelled'
+    item_to_cancel['EstimatedDeliveryDate'] = None
+    item_to_cancel['DeliveryDate'] = None
+    item_to_cancel['RefundMessage'] = f"Refund of {item_to_cancel['Cost']} processed for the cancelled item & Item will be picked up in 2-3 business days"
+
+    # Update the total cost of the entire order
+    order['Totalcost'] -= item_to_cancel['Cost']
+
     db.orders.update_one(
         {'_id': ObjectId(order_id)},
-        {'$set': {
-            'deliveryStatus': 'Cancelled',
-            'refundMessage': refund_message
-        }}
+        {'$set': {'items': order['items'], 'Totalcost': order['Totalcost']}}
     )
-    
-    return jsonify({'message': 'Order cancelled successfully', 'refundMessage': refund_message}), 200
+
+    return jsonify({'message': 'Item cancelled successfully'}), 200

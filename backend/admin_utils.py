@@ -6,13 +6,13 @@ from database import db
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = None
+        admin_token = None
         if 'Authorization' in request.headers:
-            token = request.headers['Authorization'].split(' ')[1]
-        if not token:
+            admin_token = request.headers['Authorization'].split(' ')[1]
+        if not admin_token:
             return jsonify({'error': 'Token is missing'}), 401
         try:
-            data = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+            data = jwt.decode(admin_token, 'secret_key', algorithms=['HS256'])
             current_user = db.admin.find_one({'email': data['email']})
             if not current_user:
                 return jsonify({'error': 'Invalid token'}), 401

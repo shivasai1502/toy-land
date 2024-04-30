@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { CiEdit } from 'react-icons/ci';
-import { MdDelete } from 'react-icons/md';
 import { IoIosAddCircle } from 'react-icons/io';
 import { TiTick } from 'react-icons/ti';
 import { MdCancel } from 'react-icons/md';
@@ -23,8 +21,8 @@ const AdminProduct = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    const admin_token = localStorage.getItem('admin_token');
+    if (!admin_token) {
       navigate('/admin/login');
     } else {
       fetchCategories();
@@ -35,7 +33,7 @@ const AdminProduct = () => {
     try {
       const response = await axios.get('http://localhost:5000/api/admin/category/all', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
         },
       });
       setCategories(response.data);
@@ -85,7 +83,7 @@ const AdminProduct = () => {
       await axios.post('http://localhost:5000/api/admin/product/insert', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
         },
       });
       setShowAddForm(false);
@@ -99,13 +97,13 @@ const AdminProduct = () => {
   return (
     <div className="admin-product-container">
       <h2>Manage Products</h2>
-      <button onClick={handleAddProduct}>
+      <button className="admin-product-container-button" onClick={handleAddProduct}>
         <IoIosAddCircle /> Add New Product
       </button>
-      {error && <p className="error-message">{error}</p>}
+      {error && <p className="admin-product-error-message">{error}</p>}
       {showAddForm && (
         <form onSubmit={handleSubmit} className="admin-product-view-form">
-          <div className="form-group">
+          <div className="admin-product-form-group">
             <label htmlFor="name">Name:</label>
             <input
               type="text"
@@ -114,7 +112,7 @@ const AdminProduct = () => {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div className="admin-product-form-group">
             <label htmlFor="description">Description:</label>
             <textarea
               id="description"
@@ -122,7 +120,7 @@ const AdminProduct = () => {
               onChange={(e) => setDescription(e.target.value)}
             ></textarea>
           </div>
-          <div className="form-group">
+          <div className="admin-product-form-group">
             <label htmlFor="price">Price:</label>
             <input
               type="number"
@@ -132,7 +130,7 @@ const AdminProduct = () => {
               onChange={(e) => setPrice(e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div className="admin-product-form-group">
             <label htmlFor="category">Category:</label>
             <select
               id="category"
@@ -147,7 +145,7 @@ const AdminProduct = () => {
               ))}
             </select>
           </div>
-          <div className="form-group">
+          <div className="admin-product-form-group">
             <label htmlFor="ageRange">Age Range:</label>
             <input
               type="text"
@@ -156,7 +154,7 @@ const AdminProduct = () => {
               onChange={(e) => setAgeRange(e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div className="admin-product-form-group">
             <label htmlFor="image">Image:</label>
             <input
               type="file"
@@ -165,7 +163,7 @@ const AdminProduct = () => {
               onChange={(e) => setImage(e.target.files[0])}
             />
           </div>
-          <div className="form-group">
+          <div className="admin-product-form-group">
             <label htmlFor="stock">Stock:</label>
             <input
               type="number"
@@ -174,21 +172,21 @@ const AdminProduct = () => {
               onChange={(e) => setStock(e.target.value)}
             />
           </div>
-          <div className="form-actions">
-            <button type="submit">
+          <div className="admin-product-form-actions">
+            <button className="admin-product-container-button" type="submit">
               <TiTick /> Add Product
             </button>
-            <button type="button" onClick={() => setShowAddForm(false)}>
+            <button className="admin-product-container-button" type="button" onClick={() => setShowAddForm(false)}>
               <MdCancel /> Cancel
             </button>
           </div>
         </form>
       )}
-      <div className="admin-category-list">
+      <div className="admin-product-category-list">
         {categories.map((category) => (
-          <div key={category._id} className="admin-category-item">
+          <div key={category._id} className="admin-product-category-item">
             <div
-              className="admin-category-header"
+              className="admin-product-category-header"
               onClick={() => handleCategoryClick(category._id)}
             >
               <h3>{category.CategoryName}</h3>

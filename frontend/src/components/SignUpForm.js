@@ -15,19 +15,19 @@ const SignUpForm = () => {
   const handleRegistration = async (e) => {
     e.preventDefault();
     if (!validateName(firstname) || !validateName(lastname)) {
-      setError("Names must contain only alphabets");
+      setError('Names must contain only alphabets');
       return;
     }
     if (!validateEmail(email)) {
-      setError("Invalid email address");
+      setError('Invalid email address');
       return;
     }
     if (!validatePassword(password)) {
-      setError("Password must be at least 8 characters long");
+      setError('Password must be at least 8 characters long');
       return;
     }
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError('Passwords do not match');
       return;
     }
     try {
@@ -37,7 +37,7 @@ const SignUpForm = () => {
         email,
         password,
       });
-      setError("User Registered Successfully");
+      setError('User Registered Successfully');
       navigate('/login');
     } catch (error) {
       setError('Registration failed. Please try again.');
@@ -50,7 +50,7 @@ const SignUpForm = () => {
   };
 
   const validateEmail = (email) => {
-    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+    const emailRegex = /^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/;
     return emailRegex.test(email);
   };
 
@@ -60,9 +60,9 @@ const SignUpForm = () => {
 
   return (
     <div className="form-container sign-up-container">
-      <form onSubmit={handleRegistration}>
-        <h1>Create Account</h1>
-        <span>use your email for registration</span>
+      <form onSubmit={handleRegistration} className="signup-form">
+        <h1 className="signup-title">Create Account</h1>
+        <span className="signup-subtitle">use your email for registration</span>
         <input
           type="text"
           name="first_name"
@@ -70,6 +70,7 @@ const SignUpForm = () => {
           onChange={(e) => setFirstname(e.target.value)}
           placeholder="First Name"
           required
+          className="signup-input"
         />
         <input
           type="text"
@@ -78,6 +79,7 @@ const SignUpForm = () => {
           onChange={(e) => setLastname(e.target.value)}
           placeholder="Last Name"
           required
+          className="signup-input"
         />
         <input
           type="email"
@@ -86,6 +88,7 @@ const SignUpForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           required
+          className="signup-input"
         />
         <input
           type="password"
@@ -94,6 +97,7 @@ const SignUpForm = () => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           required
+          className="signup-input"
         />
         <input
           type="password"
@@ -102,9 +106,12 @@ const SignUpForm = () => {
           onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="Confirm Password"
           required
+          className="signup-input"
         />
-        <button type="submit">Sign Up</button>
-        {error && <div className="error-message">{error}</div>}
+        <button type="submit" className="signup-button">
+          Sign Up
+        </button>
+        {error && <div className="signup-error-message">{error}</div>}
       </form>
     </div>
   );

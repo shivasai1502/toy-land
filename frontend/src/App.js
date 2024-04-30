@@ -17,6 +17,7 @@ import AdminCategoryPage from './pages/AdminCategoryPage';
 import AdminProductsPage from './pages/AdminProductsPage';
 import AdminHandleOrdersPage from './pages/AdminHandleOrdersPage';
 import AdminProductViewPage from './pages/AdminProductViewPage';
+import ViewOrderPage from './pages/ViewOrderPage';
 
 const App = () => {
   const navigate = useNavigate();
@@ -60,8 +61,9 @@ const App = () => {
         <Route path="/admin/home" element={<AdminHomePage />} />
         <Route path="/admin/categories" element={<AdminCategoryPage />} />
         <Route path="/admin/products" element={<AdminProductsPage />} />
-        <Route path="/admin/handle-orders" element={<AdminHandleOrdersPage />} />
+        <Route path="/admin/orders" element={<AdminHandleOrdersPage />} />
         <Route path="/admin/product/:productId" element={<AdminProductViewPage />} />
+        <Route path="/order/:orderId" element={<ViewOrderPage />} />
       </Routes>
     </div>
   );

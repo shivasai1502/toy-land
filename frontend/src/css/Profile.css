@@ -1,122 +1,141 @@
 .profile-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.profile-container h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.profile-fields {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-title {
+  font-size: 32px;
   margin-bottom: 20px;
+  color: #000;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.edit-icon {
+  cursor: pointer;
+  margin-left: 10px;
+  color: #000;
+  transition: color 0.3s;
+}
+
+.edit-icon:hover {
+  color: #8c5e6b;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 800px;
 }
 
 .profile-field {
-  flex: 1;
-}
-
-.profile-field label {
-  display: block;
-  font-size: 16px;
-  margin-bottom: 5px;
-}
-
-.profile-field input {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.profile-addresses {
-  margin-top: 30px;
-}
-
-.profile-addresses h3 {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.profile-address {
   margin-bottom: 20px;
-  padding: 20px;
-  background-color: #f5f5f5;
-  border-radius: 4px;
 }
 
-.profile-address-fields {
+.profile-label {
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+}
+
+.profile-value {
+  font-size: 18px;
+  color: #000;
+  margin-left: 20px;
+}
+
+.profile-input {
+  width: 50%;
+  padding: 8px;
+  font-size: 18px;
+  border-radius: 5px;
+  border: 2px solid #583442;
+  transition: border-color 0.3s;
+  color: #000;
+  margin-left: 20px;
+}
+
+.profile-input:focus {
+  outline: none;
+  border-color: #8c5e6b;
+}
+
+.address-list {
+  list-style: none;
+  padding: 0;
+}
+
+.address-item {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #000;
+}
+
+.address-item span {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #000;
+  margin-left: 40px;
+}
+
+.address-number {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.address-row {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
   margin-bottom: 10px;
 }
 
-.profile-address-field {
+.address-input {
   flex: 1;
-}
-
-.profile-address-field label {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-
-.profile-address-field input {
-  width: 100%;
   padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.profile-address-delete {
-  margin-top: 10px;
-}
-
-.profile-address-delete button {
-  padding: 5px 10px;
-  font-size: 14px;
-  background-color: #dc3545;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.profile-add-address {
-  margin-top: 10px;
-}
-
-.profile-add-address button {
-  padding: 5px 10px;
-  font-size: 14px;
-  background-color: blue;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.profile-save-button {
+  font-size: 18px;
+  border-radius: 5px;
+  border: 2px solid #583442;
+  transition: border-color 0.3s;
+  margin-right: 10px;
+  color: #000;
+  margin-left: 20px;
   margin-top: 20px;
-  text-align: center;
 }
 
-.profile-save-button button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #28a745;
-  color: #fff;
+.address-input:focus {
+  outline: none;
+  border-color: #8c5e6b;
+}
+
+.address-actions {
+  display: flex;
+  align-items: center;
+}
+
+
+.profile-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.save-btn,
+.cancel-btn,
+.add-btn,
+.delete-btn {
+  padding: 8px 16px;
+  font-size: 18px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s;
+  background-color: #583442;
+  color: #fff;
+  margin-right: 10px;
 }
 
-.profile-save-button button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
+

@@ -22,12 +22,12 @@ def login():
             return jsonify({'error': 'Invalid username or password'}), 401
         current_time = datetime.datetime.now(datetime.timezone.utc)
         expiration_time = current_time + datetime.timedelta(minutes=60)
-        token = jwt.encode({
+        admin_token = jwt.encode({
             'email': email,
             'iat': current_time,
             'exp': expiration_time
         }, 'secret_key', algorithm='HS256')
-        return jsonify({'token': token}), 200
+        return jsonify({'admin_token': admin_token}), 200
     except Exception as e:
         print(f"Error during login: {str(e)}")
         return jsonify({'error': 'An error occurred during login'}), 500
@@ -127,19 +127,3 @@ def get_toy_data(current_user):
     except Exception as e:
         print(f"Error fetching toy data: {str(e)}")
         return jsonify({'error': 'An error occurred while fetching toy data'}), 500
-
-@admin_routes.route('/delivery', methods=['GET'])
-@token_required
-def get_delivery_data(current_user):
-    try:
-        delivered_orders = db.orders.count_documents({'deliveryStatus': 'Delivered'})
-        pending_orders = db.orders.count_documents({'deliveryStatus': 'Pending'})
-        cancelled_orders = db.orders.count_documents({'deliveryStatus': 'Cancelled'})
-        return jsonify({
-            'deliveredOrders': delivered_orders,
-            'pendingOrders': pending_orders,
-            'cancelledOrders': cancelled_orders
-        }), 200
-    except Exception as e:
-        print(f"Error fetching delivery data: {str(e)}")
-        return jsonify({'error': 'An error occurred while fetching delivery data'}), 500

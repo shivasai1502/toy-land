@@ -20,8 +20,8 @@ const AdminCategory = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    const admin_token = localStorage.getItem('admin_token');
+    if (!admin_token) {
       navigate('/admin/login');
     } else {
       fetchCategories();
@@ -32,7 +32,7 @@ const AdminCategory = () => {
     try {
       const response = await axios.get('http://localhost:5000/api/admin/category/all', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
         },
       });
       setCategories(response.data);
@@ -62,7 +62,7 @@ const AdminCategory = () => {
       await axios.post('http://localhost:5000/api/admin/category/insert', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
         },
       });
       setShowAddForm(false);
@@ -98,7 +98,7 @@ const AdminCategory = () => {
       await axios.put(`http://localhost:5000/api/admin/category/edit/${editCategoryId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
         },
       });
       setEditCategoryId(null);
@@ -116,7 +116,7 @@ const AdminCategory = () => {
       try {
         await axios.delete(`http://localhost:5000/api/admin/category/delete/${categoryId}`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
           },
         });
         fetchCategories();
@@ -129,12 +129,12 @@ const AdminCategory = () => {
   return (
     <div className="admin-category-container">
       <h2>Manage Categories</h2>
-      <button onClick={handleAddCategory}>
+      <button className="admin-category-button" onClick={handleAddCategory}>
         <IoIosAddCircle /> Add New Category
       </button>
       {showAddForm && (
         <form onSubmit={handleSubmit} className="admin-category-form">
-          <div className="form-group">
+          <div className="admin-category-form-group">
             <label htmlFor="categoryName">Category Name:</label>
             <input
               type="text"
@@ -143,7 +143,7 @@ const AdminCategory = () => {
               onChange={(e) => setCategoryName(e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div className="admin-category-form-group">
             <label htmlFor="categoryImage">Category Image:</label>
             <input
               type="file"
@@ -152,12 +152,12 @@ const AdminCategory = () => {
               onChange={(e) => setCategoryImage(e.target.files[0])}
             />
           </div>
-          {error && <p className="error-message">{error}</p>}
-          <div className="form-actions">
-            <button type="submit">
+          {error && <p className="admin-category-error-message">{error}</p>}
+          <div className="admin-category-form-actions">
+            <button type="submit" className="admin-category-button">
               <TiTick /> Submit
             </button>
-            <button type="button" onClick={() => setShowAddForm(false)}>
+            <button type="button" className="admin-category-button" onClick={() => setShowAddForm(false)}>
               <MdCancel /> Cancel
             </button>
           </div>
@@ -188,21 +188,21 @@ const AdminCategory = () => {
                         accept=".jpg,.jpeg,.png"
                         onChange={(e) => setEditCategoryImage(e.target.files[0])}
                       />
-                      <div className="form-actions">
-                        <button type="submit">
+                      <div className="admin-category-form-actions">
+                        <button type="submit" className="admin-category-button">
                           <TiTick /> Save
                         </button>
-                        <button type="button" onClick={() => setEditCategoryId(null)}>
+                        <button type="button" className="admin-category-button" onClick={() => setEditCategoryId(null)}>
                           <MdCancel /> Cancel
                         </button>
                       </div>
                     </form>
                   ) : (
                     <>
-                      <button onClick={() => handleEdit(category)}>
+                      <button className="admin-category-button" onClick={() => handleEdit(category)}>
                         <CiEdit /> Edit
                       </button>
-                      <button onClick={() => handleDelete(category._id)}>
+                      <button className="admin-category-button" onClick={() => handleDelete(category._id)}>
                         <MdDelete /> Delete
                       </button>
                     </>
