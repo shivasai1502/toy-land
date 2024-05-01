@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TiTick } from 'react-icons/ti';
@@ -19,17 +19,7 @@ const AdminProductView = () => {
   const [stock, setStock] = useState('');
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    const admin_token = localStorage.getItem('admin_token');
-    if (!admin_token) {
-      navigate('/admin/login');
-    } else {
-      fetchProduct();
-      fetchCategories();
-    }
-  }, [navigate, productId]);
-
-  const fetchProduct = async () => {
+  const fetchProduct = useCallback(async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/admin/product/${productId}`, {
         headers: {
@@ -47,9 +37,9 @@ const AdminProductView = () => {
     } catch (error) {
       console.error('Error fetching product:', error);
     }
-  };
+  }, [productId]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/admin/category/all', {
         headers: {
@@ -60,7 +50,17 @@ const AdminProductView = () => {
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const admin_token = localStorage.getItem('admin_token');
+    if (!admin_token) {
+      navigate('/admin/login');
+    } else {
+      fetchProduct();
+      fetchCategories();
+    }
+  }, [navigate, productId, fetchProduct, fetchCategories]);
 
   const handleSave = async (e) => {
     e.preventDefault();

@@ -90,6 +90,22 @@ const Profile = () => {
         // Redirect to login page if token is not available
         return;
       }
+
+      // Validate address fields
+      const isAddressValid = editedProfile.addresses.every((address) => {
+        return (
+          (address.address_line_1.trim() !== '' || address.address_line_2.trim() !== '') &&
+          address.city.trim() !== '' &&
+          address.state.trim() !== '' &&
+          address.zipcode.trim() !== ''
+        );
+      });
+
+      if (!isAddressValid) {
+        alert('Please fill in either address line 1 or address line 2, and all other required address fields.');
+        return;
+      }
+
       await axios.put('http://localhost:5000/api/profile/update', editedProfile, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -233,27 +249,27 @@ const Profile = () => {
                       className="address-input"
                       placeholder="Zipcode"
                     />
-                    <div className="address-actions">
-                      <button
-                        className="delete-btn"
-                        onClick={() => handleDeleteAddress(index)}
-                      >
-                         Delete
-                      </button>
-                      <button className="add-btn" onClick={handleAddAddress}>
-                         Add Address
-                      </button>
-                    </div>
                   </div>
+                  {editedProfile.addresses.length > 1 && (
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDeleteAddress(index)}
+                    >
+                      Delete
+                    </button>
+                  )}
                 </div>
               ))}
+              <button className="add-btn" onClick={handleAddAddress}>
+                Add Address
+              </button>
             </div>
           )}
         </div>
         {isEditing && (
           <div className="profile-actions">
             <button className="save-btn" onClick={handleSave}>
-               Save
+              Save
             </button>
             <button className="cancel-btn" onClick={handleCancel}>
               Cancel

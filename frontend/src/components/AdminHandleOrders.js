@@ -109,31 +109,36 @@ const AdminHandleOrders = () => {
     return acc;
   }, { Pending: [], Transit: [], Cancelled: [], Delivered: [] });
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setSelectedOrder(null); // Close the displayed order details when changing tabs
+  };
+
   return (
     <div className="admin-handle-orders-container">
       <h2>Manage Orders</h2>
       <div className="admin-handle-orders-tabs">
         <button
           className={`admin-handle-orders-tab ${activeTab === 'Pending' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Pending')}
+          onClick={() => handleTabChange('Pending')}
         >
           Pending Orders ({filteredOrders.Pending.length})
         </button>
         <button
           className={`admin-handle-orders-tab ${activeTab === 'Transit' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Transit')}
+          onClick={() => handleTabChange('Transit')}
         >
           Transit Orders ({filteredOrders.Transit.length})
         </button>
         <button
           className={`admin-handle-orders-tab ${activeTab === 'Cancelled' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Cancelled')}
+          onClick={() => handleTabChange('Cancelled')}
         >
           Cancelled Orders ({filteredOrders.Cancelled.length})
         </button>
         <button
           className={`admin-handle-orders-tab ${activeTab === 'Delivered' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Delivered')}
+          onClick={() => handleTabChange('Delivered')}
         >
           Delivered Orders ({filteredOrders.Delivered.length})
         </button>
@@ -208,48 +213,50 @@ const AdminHandleOrders = () => {
               </tr>
             </thead>
             <tbody>
-              {selectedOrder.items.map((item, index) => (
-                <tr key={item.product_id}>
-                  <td>{index + 1}</td>
-                  <td>
-                    <span>{item.name}</span>
-                  </td>
-                  <td>{item.quantity}</td>
-                  <td>
-                    <select
-                      value={item.deliveryStatus}
-                      onChange={(e) => handleUpdateOrder(item.product_id, 'deliveryStatus', e.target.value)}
-                    >
-                      <option value="Pending">Pending</option>
-                      <option value="Transit">Transit</option>
-                      <option value="Delivered">Delivered</option>
-                      <option value="Cancelled">Cancelled</option>
-                    </select>
-                  </td>
-                  <td>
-                    <input
-                      type="date"
-                      value={item.EstimatedDeliveryDate}
-                      onChange={(e) => handleUpdateOrder(item.product_id, 'EstimatedDeliveryDate', e.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="date"
-                      value={item.DeliveryDate}
-                      onChange={(e) => handleUpdateOrder(item.product_id, 'DeliveryDate', e.target.value)}
-                    />
-                  </td>
-                  <td>{item.Cost.toFixed(2)}</td>
-                  <td>
-                    {editItem && editItem.itemId === item.product_id ? (
-                      <button className="admin-handle-orders-button" onClick={() => saveUpdate(item.product_id)}>
-                        Save
-                      </button>
-                    ) : null}
-                  </td>
-                </tr>
-              ))}
+              {selectedOrder.items
+                .filter((item) => item.deliveryStatus === activeTab)
+                .map((item, index) => (
+                  <tr key={item.product_id}>
+                    <td>{index + 1}</td>
+                    <td>
+                      <span>{item.name}</span>
+                    </td>
+                    <td>{item.quantity}</td>
+                    <td>
+                      <select
+                        value={item.deliveryStatus}
+                        onChange={(e) => handleUpdateOrder(item.product_id, 'deliveryStatus', e.target.value)}
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="Transit">Transit</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                    </td>
+                    <td>
+                      <input
+                        type="date"
+                        value={item.EstimatedDeliveryDate}
+                        onChange={(e) => handleUpdateOrder(item.product_id, 'EstimatedDeliveryDate', e.target.value)}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="date"
+                        value={item.DeliveryDate}
+                        onChange={(e) => handleUpdateOrder(item.product_id, 'DeliveryDate', e.target.value)}
+                      />
+                    </td>
+                    <td>{item.Cost.toFixed(2)}</td>
+                    <td>
+                      {editItem && editItem.itemId === item.product_id ? (
+                        <button className="admin-handle-orders-button" onClick={() => saveUpdate(item.product_id)}>
+                          Save
+                        </button>
+                      ) : null}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

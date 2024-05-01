@@ -205,12 +205,10 @@ def cancel_item(user, order_id, item_id):
     item_to_cancel['DeliveryDate'] = None
     item_to_cancel['RefundMessage'] = f"Refund of {item_to_cancel['Cost']} processed for the cancelled item & Item will be picked up in 2-3 business days"
 
-    # Update the total cost of the entire order
-    order['Totalcost'] -= item_to_cancel['Cost']
 
     db.orders.update_one(
         {'_id': ObjectId(order_id)},
-        {'$set': {'items': order['items'], 'Totalcost': order['Totalcost']}}
+        {'$set': {'items': order['items']}}
     )
 
     return jsonify({'message': 'Item cancelled successfully'}), 200
