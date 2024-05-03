@@ -15,26 +15,29 @@ def register():
     lastname = data.get('lastname')
     email = data.get('email')
     password = data.get('password')
+    date_of_birth = data.get('dateOfBirth')
+    phone_number = data.get('phoneNumber')
+    address = data.get('address')
 
     if not firstname or not lastname or not email or not password:
         return jsonify({'error': 'Please provide all required fields'}), 400
 
     hashed_password = generate_password_hash(password)
-
     customer = {
         'firstname': firstname,
         'lastname': lastname,
         'email': email,
         'password': hashed_password,
-        'phone_number': None,
-        'addresses': []
+        'date_of_birth': date_of_birth,
+        'phone_number': phone_number,
+        'addresses': [address] if address else []
     }
 
     try:
         db.customer.insert_one(customer)
         return jsonify({'message': 'Customer registered successfully'}), 201
     except DuplicateKeyError:
-        return jsonify({'error': 'Username or email already exists'}), 400
+        return jsonify({'error': 'Email already exists'}), 400
 
 
 @auth_routes.route('/login', methods=['POST'])

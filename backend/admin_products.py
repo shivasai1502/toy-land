@@ -28,6 +28,7 @@ def add_product(current_user):
         price = float(data.get('price'))
         category = data.get('category')
         age_range = data.get('age_range')
+        unit= data.get('unit')
         stock = int(data.get('stock'))
         image = request.files.get('image')
         
@@ -41,6 +42,7 @@ def add_product(current_user):
             'description': description,
             'price': price,
             'category': category,
+            'unit': unit,
             'age_range': age_range,
             'image_id': image_id,
             'stock': stock
@@ -76,6 +78,7 @@ def update_product(current_user, product_id):
         price = float(data.get('price'))
         category = data.get('category')
         age_range = data.get('age_range')
+        unit= data.get('unit') if data.get('unit') else None
         stock = int(data.get('stock'))
         image = request.files.get('image')
         
@@ -87,6 +90,7 @@ def update_product(current_user, product_id):
                 'description': description,
                 'price': price,
                 'category': category,
+                'unit': unit, # Add this line to update the 'unit' field
                 'age_range': age_range,
                 'stock': stock
             }

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { CiEdit } from 'react-icons/ci';
-import { MdDelete } from 'react-icons/md';
 import { IoIosAddCircle } from 'react-icons/io';
 import { TiTick } from 'react-icons/ti';
 import { MdCancel } from 'react-icons/md';
@@ -110,22 +109,6 @@ const AdminCategory = () => {
     }
   };
 
-  const handleDelete = async (categoryId) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this category?');
-    if (confirmDelete) {
-      try {
-        await axios.delete(`http://localhost:5000/api/admin/category/delete/${categoryId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
-          },
-        });
-        fetchCategories();
-      } catch (error) {
-        console.error('Error deleting category:', error);
-      }
-    }
-  };
-
   return (
     <div className="admin-category-container">
       <h2>Manage Categories</h2>
@@ -198,14 +181,9 @@ const AdminCategory = () => {
                       </div>
                     </form>
                   ) : (
-                    <>
-                      <button className="admin-category-button" onClick={() => handleEdit(category)}>
-                        <CiEdit /> Edit
-                      </button>
-                      <button className="admin-category-button" onClick={() => handleDelete(category._id)}>
-                        <MdDelete /> Delete
-                      </button>
-                    </>
+                    <button className="admin-category-button" onClick={() => handleEdit(category)}>
+                      <CiEdit /> Edit
+                    </button>
                   )}
                 </td>
               </tr>

@@ -15,6 +15,7 @@ const Payment = () => {
   const [paymentMethodName, setPaymentMethodName] = useState('');
   const [savedPaymentMethods, setSavedPaymentMethods] = useState([]);
   const [useExistingPayment, setUseExistingPayment] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const {
     selectedItems,
@@ -170,8 +171,13 @@ const Payment = () => {
         },
       });
 
-      alert('Order placed successfully!');
-      navigate('/home');
+      // Display success message
+      setSuccessMessage('Payment successful!');
+
+      // Navigate to /home after a short delay
+      setTimeout(() => {
+        navigate('/home');
+      }, 2000);
     } catch (error) {
       console.error('Error placing order:', error);
     }
@@ -219,63 +225,120 @@ const Payment = () => {
               <label className="payment-option-label">
                 <input
                   type="radio"
-                  value="card"
-                  checked={paymentMethod === 'card'}
+                  value="credit"
+                  checked={paymentMethod === 'credit'}
                   onChange={handlePaymentMethodChange}
                 />
-                <span className="payment-option-text">Credit / Debit Card</span>
+                <span className="payment-option-text">Credit Card</span>
               </label>
-            </div>
-            {paymentMethod === 'card' && (
-              <div className="payment-card-details">
-                <input
-                  type="text"
-                  placeholder="Cardholder Name"
-                  value={cardholderName}
-                  onChange={handleCardholderNameChange}
-                />
-                <input
-                  type="text"
-                  placeholder="Card Number"
-                  value={cardNumber}
-                  onChange={handleCardNumberChange}
-                  maxLength={16}
-                />
-                <input
-                  type="text"
-                  placeholder="Expiry Date (MM/YY)"
-                  value={expiryDate}
-                  onChange={handleExpiryDateChange}
-                  maxLength={5}
-                />
-                <input
-                  type="password"
-                  placeholder="CVV"
-                  value={cvv}
-                  onChange={handleCvvChange}
-                  maxLength={3}
-                />
-                <label className="payment-save-card-label">
-                  <input
-                    type="checkbox"
-                    checked={saveCardDetails}
-                    onChange={(e) => setSaveCardDetails(e.target.checked)}
-                  />
-                  <span className="payment-save-card-text">Save Card Details</span>
-                </label>
-                {saveCardDetails && (
+              {paymentMethod === 'credit' && (
+                <div className="payment-card-details">
                   <input
                     type="text"
-                    placeholder="Payment Method Name"
-                    value={paymentMethodName}
-                    onChange={(e) => setPaymentMethodName(e.target.value)}
+                    placeholder="Cardholder Name"
+                    value={cardholderName}
+                    onChange={handleCardholderNameChange}
                   />
-                )}
-              </div>
-            )}
+                  <input
+                    type="text"
+                    placeholder="Card Number"
+                    value={cardNumber}
+                    onChange={handleCardNumberChange}
+                    maxLength={16}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Expiry Date (MM/YY)"
+                    value={expiryDate}
+                    onChange={handleExpiryDateChange}
+                    maxLength={5}
+                  />
+                  <input
+                    type="password"
+                    placeholder="CVV"
+                    value={cvv}
+                    onChange={handleCvvChange}
+                    maxLength={3}
+                  />
+                  <label className="payment-save-card-label">
+                    <input
+                      type="checkbox"
+                      checked={saveCardDetails}
+                      onChange={(e) => setSaveCardDetails(e.target.checked)}
+                    />
+                    <span className="payment-save-card-text">Save Card Details</span>
+                  </label>
+                  {saveCardDetails && (
+                    <input
+                      type="text"
+                      placeholder="Payment Method Name"
+                      value={paymentMethodName}
+                      onChange={(e) => setPaymentMethodName(e.target.value)}
+                    />
+                  )}
+                </div>
+              )}
+              <label className="payment-option-label">
+                <input
+                  type="radio"
+                  value="debit"
+                  checked={paymentMethod === 'debit'}
+                  onChange={handlePaymentMethodChange}
+                />
+                <span className="payment-option-text">Debit Card</span>
+              </label>
+              {paymentMethod === 'debit' && (
+                <div className="payment-card-details">
+                  <input
+                    type="text"
+                    placeholder="Cardholder Name"
+                    value={cardholderName}
+                    onChange={handleCardholderNameChange}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Card Number"
+                    value={cardNumber}
+                    onChange={handleCardNumberChange}
+                    maxLength={16}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Expiry Date (MM/YY)"
+                    value={expiryDate}
+                    onChange={handleExpiryDateChange}
+                    maxLength={5}
+                  />
+                  <input
+                    type="password"
+                    placeholder="CVV"
+                    value={cvv}
+                    onChange={handleCvvChange}
+                    maxLength={3}
+                  />
+                  <label className="payment-save-card-label">
+                    <input
+                      type="checkbox"
+                      checked={saveCardDetails}
+                      onChange={(e) => setSaveCardDetails(e.target.checked)}
+                    />
+                    <span className="payment-save-card-text">Save Card Details</span>
+                  </label>
+                  {saveCardDetails && (
+                    <input
+                      type="text"
+                      placeholder="Payment Method Name"
+                      value={paymentMethodName}
+                      onChange={(e) => setPaymentMethodName(e.target.value)}
+                    />
+                  )}
+                </div>
+              )}
+            </div>
           </>
         )}
       </div>
+      {successMessage && <p className="payment-success-message">{successMessage}</p>}
       <button className="payment-button" onClick={placeOrder}>
         Pay
       </button>

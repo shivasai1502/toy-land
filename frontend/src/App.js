@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
-import LogInFormPage from './pages/LogInFormPage';
 import CategoryProductsPage from './pages/CategoryProductsPage';
 import ViewAllPage from './pages/viewAllPage';
 import HomePage from './pages/HomePage';
@@ -18,6 +17,8 @@ import AdminProductsPage from './pages/AdminProductsPage';
 import AdminHandleOrdersPage from './pages/AdminHandleOrdersPage';
 import AdminProductViewPage from './pages/AdminProductViewPage';
 import ViewOrderPage from './pages/ViewOrderPage';
+import SignUpFormPage from './pages/SignUpFormPage';
+import SignInFormPage from './pages/SignInFormPage';
 
 const App = () => {
   const navigate = useNavigate();
@@ -47,7 +48,6 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="/home" element={<HomePage />} />
-        <Route path="/login" element={<LogInFormPage />} />
         <Route path="/category/:categoryId" element={<CategoryProductsPage />} />
         <Route path="/view-all-products" element={<ViewAllPage />} />
         <Route path="/cart" element={<CartPage />} />
@@ -64,6 +64,8 @@ const App = () => {
         <Route path="/admin/orders" element={<AdminHandleOrdersPage />} />
         <Route path="/admin/product/:productId" element={<AdminProductViewPage />} />
         <Route path="/order/:orderId" element={<ViewOrderPage />} />
+        <Route path="/signup" element={<SignUpFormPage />} />
+        <Route path="/login" element={<SignInFormPage />} />
       </Routes>
     </div>
   );

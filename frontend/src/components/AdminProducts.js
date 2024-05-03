@@ -14,6 +14,7 @@ const AdminProduct = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
+  const [unit, setUnit] = useState('Piece');
   const [category, setCategory] = useState('');
   const [ageRange, setAgeRange] = useState('');
   const [image, setImage] = useState(null);
@@ -59,6 +60,7 @@ const AdminProduct = () => {
     setName('');
     setDescription('');
     setPrice('');
+    setUnit('Piece');
     setCategory('');
     setAgeRange('');
     setImage(null);
@@ -73,6 +75,7 @@ const AdminProduct = () => {
       formData.append('name', name);
       formData.append('description', description);
       formData.append('price', price);
+      formData.append('unit', unit);
       formData.append('category', category);
       formData.append('age_range', ageRange);
       if (image) {
@@ -129,6 +132,18 @@ const AdminProduct = () => {
               value={price}
               onChange={(e) => setPrice(e.target.value)}
             />
+          </div>
+          <div className="admin-product-form-group">
+            <label htmlFor="unit">Unit:</label>
+            <select
+              id="unit"
+              value={unit}
+              onChange={(e) => setUnit(e.target.value)}
+            >
+              <option value="Piece">Piece</option>
+              <option value="Dozen">Dozen</option>
+              <option value="Box">Box</option>
+            </select>
           </div>
           <div className="admin-product-form-group">
             <label htmlFor="category">Category:</label>

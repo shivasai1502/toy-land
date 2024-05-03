@@ -87,6 +87,83 @@
   margin-bottom: 10px;
 }
 
+.address-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.address-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  position: relative;
+  padding-left: 25px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.address-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: #8e8e8e;
+  border-radius: 50%;
+}
+
+.address-option:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+.address-option input:checked ~ .checkmark {
+  background-color: #583442;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.address-option input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.address-option .checkmark:after {
+  top: 4px;
+  left: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: white;
+}
+
+.label-text {
+  margin-left: 10px;
+  font-size: medium;
+}
+
+.new-address-inputs {
+  margin-top: 10px;
+  margin-left: 25px;
+}
+
+.new-address-inputs input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
 .phone-number {
   margin-bottom: 30px;
 }
@@ -115,48 +192,6 @@
   position: absolute;
   opacity: 0;
   cursor: pointer;
-}
-
-.checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 15px;
-  width: 15px;
-  background-color: #8e8e8e;
-  border-radius: 50%;
-}
-
-.phone-number-option:hover input ~ .checkmark {
-  background-color: #ccc;
-}
-
-.phone-number-option input:checked ~ .checkmark {
-  background-color: #583442;
-}
-
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-
-.phone-number-option input:checked ~ .checkmark:after {
-  display: block;
-}
-
-.phone-number-option .checkmark:after {
-  top: 4px;
-  left: 4px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: white;
-}
-
-.label-text {
-  margin-left: 10px;
-  font-size: medium;
 }
 
 .existing-number,

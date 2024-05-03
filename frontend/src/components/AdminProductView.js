@@ -13,6 +13,7 @@ const AdminProductView = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
+  const [unit, setUnit] = useState('Piece');
   const [category, setCategory] = useState('');
   const [ageRange, setAgeRange] = useState('');
   const [image, setImage] = useState(null);
@@ -34,6 +35,7 @@ const AdminProductView = () => {
       setCategory(productData.category);
       setAgeRange(productData.age_range);
       setStock(productData.stock);
+      setUnit('Piece');
     } catch (error) {
       console.error('Error fetching product:', error);
     }
@@ -69,6 +71,7 @@ const AdminProductView = () => {
       formData.append('name', name);
       formData.append('description', description);
       formData.append('price', price);
+      formData.append('unit', unit);
       formData.append('category', category);
       formData.append('age_range', ageRange);
       if (image) {
@@ -142,6 +145,18 @@ const AdminProductView = () => {
             onChange={(e) => setPrice(e.target.value)}
           />
         </div>
+        <div className="admin-product-view-form-group">
+            <label htmlFor="unit">Unit:</label>
+            <select
+              id="unit"
+              value={unit}
+              onChange={(e) => setUnit(e.target.value)}
+            >
+              <option value="Piece">Piece</option>
+              <option value="Dozen">Dozen</option>
+              <option value="Box">Box</option>
+            </select>
+          </div>
         <div className="admin-product-view-form-group">
           <label htmlFor="category">Category:</label>
           <select

@@ -7,7 +7,15 @@ const Checkout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [addresses, setAddresses] = useState([]);
+  const [useExistingAddress, setUseExistingAddress] = useState(true);
   const [selectedAddress, setSelectedAddress] = useState('');
+  const [newAddress, setNewAddress] = useState({
+    address_line_1: '',
+    address_line_2: '',
+    city: '',
+    state: '',
+    zipcode: '',
+  });
   const [phoneNumber, setPhoneNumber] = useState('');
   const [useExistingNumber, setUseExistingNumber] = useState(true);
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
@@ -65,6 +73,10 @@ const Checkout = () => {
     setSelectedAddress(e.target.value);
   };
 
+  const handleNewAddressChange = (e) => {
+    setNewAddress({ ...newAddress, [e.target.name]: e.target.value });
+  };
+
   const handleCouponCodeChange = (e) => {
     setCouponCode(e.target.value);
   };
@@ -89,8 +101,8 @@ const Checkout = () => {
   };
 
   const handleProceedToPayment = async () => {
-    if (!selectedAddress) {
-      alert('Please select a delivery address');
+    if (!useExistingAddress && !newAddress.address_line_1) {
+      alert('Please enter a delivery address');
       return;
     }
 
@@ -99,7 +111,12 @@ const Checkout = () => {
       return;
     }
 
-    const selectedAddressData = addresses[selectedAddress];
+    let selectedAddressData;
+    if (useExistingAddress) {
+      selectedAddressData = addresses[selectedAddress];
+    } else {
+      selectedAddressData = newAddress;
+    }
 
     try {
       const token = localStorage.getItem('token');
@@ -170,21 +187,86 @@ const Checkout = () => {
       </div>
       <div className="delivery-address">
         <h3>Delivery Address</h3>
-        {addresses.length === 0 ? (
-          <div className="no-address">
-            <p>No address found. Please add an address in your profile.</p>
-            <button onClick={() => navigate('/profile')}>Go to Profile</button>
-          </div>
-        ) : (
-          <select value={selectedAddress} onChange={handleAddressChange}>
-            <option value="">Select an address</option>
-            {addresses.map((address, index) => (
-              <option key={index} value={index}>
-                {`${address.address_line_1}, ${address.address_line_2}, ${address.city}, ${address.state}, ${address.zipcode}`}
-              </option>
-            ))}
-          </select>
-        )}
+        <div className="address-options">
+          <label className="address-option">
+            <input
+              type="radio"
+              value="existing"
+              checked={useExistingAddress}
+              onChange={() => setUseExistingAddress(true)}
+            />
+            <span className="checkmark"></span>
+            <span className="label-text">Use existing address</span>
+          </label>
+          {addresses.length === 0 ? (
+            <div className="no-address">
+              <p>No address found. Please add an address in your profile.</p>
+              <button onClick={() => navigate('/profile')}>Go to Profile</button>
+            </div>
+          ) : (
+            <select value={selectedAddress} onChange={handleAddressChange}>
+              <option value="">Select an address</option>
+              {addresses.map((address, index) => (
+                <option key={index} value={index}>
+                  {`${address.address_line_1}, ${address.address_line_2}, ${address.city}, ${address.state}, ${address.zipcode}`}
+                </option>
+              ))}
+            </select>
+          )}
+          <label className="address-option">
+            <input
+              type="radio"
+              value="new"
+              checked={!useExistingAddress}
+              onChange={() => setUseExistingAddress(false)}
+            />
+            <span className="checkmark"></span>
+            <span className="label-text">Use new address</span>
+          </label>
+          {!useExistingAddress && (
+            <div className="new-address-inputs">
+              <input
+                type="text"
+                name="address_line_1"
+                placeholder="Address Line 1"
+                value={newAddress.address_line_1}
+                onChange={handleNewAddressChange}
+                required
+              />
+              <input
+                type="text"
+                name="address_line_2"
+                placeholder="Address Line 2"
+                value={newAddress.address_line_2}
+                onChange={handleNewAddressChange}
+              />
+              <input
+                type="text"
+                name="city"
+                placeholder="City"
+                value={newAddress.city}
+                onChange={handleNewAddressChange}
+                required
+              />
+              <input
+                type="text"
+                name="state"
+                placeholder="State"
+                value={newAddress.state}
+                onChange={handleNewAddressChange}
+                required
+              />
+              <input
+                type="text"
+                name="zipcode"
+                placeholder="Zipcode"
+                value={newAddress.zipcode}
+                onChange={handleNewAddressChange}
+                required
+              />
+            </div>
+          )}
+        </div>
       </div>
       <div className="phone-number">
         <h3>Phone Number</h3>
